@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>젊음의 샘물 · 성분 중심 스킨케어</title>
+
+<!-- Pico.css : 클래스 없이도 버튼/폼/표가 정돈됨 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+
+<!-- 타이포그래피 : 한글 세리프(Gowun Batang) + 본문(Noto Sans KR) + 모노(IBM Plex Mono) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #EEF3EE;
+    --surface: #F9FBF8;
+    --ink: #212E1E;
+    --ink-soft: #5C6B55;
+    --sage: #6FA39C;
+    --sage-deep: #2E5F5A;
+    --rose: #9C4A3C;
+    --line: #D6E0D3;
+    --mono-accent: #8B9686;
+
+    --font-display: 'Gowun Batang', serif;
+    --font-body: 'Noto Sans KR', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    --pico-font-family: var(--font-body);
+    --pico-background-color: var(--bg);
+    --pico-color: var(--ink);
+    --pico-primary: var(--sage-deep);
+    --pico-primary-background: var(--sage-deep);
+    --pico-border-radius: 2px;
+    --pico-spacing: 1rem;
+  }
+
+  body{
+    background:
+      radial-gradient(circle at 16% 12%, rgba(212,178,106,0.28), transparent 40%),
+      radial-gradient(circle at 84% 8%, rgba(124,146,94,0.28), transparent 44%),
+      radial-gradient(ellipse at 50% 35%, rgba(111,163,156,0.30), transparent 60%),
+      linear-gradient(180deg, #F3F7F2 0%, #E1EDE2 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding: 3.2rem 0 2.4rem; text-align: center; }
+  .hero::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 34px;
+    margin-top: 2.4rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 34' preserveAspectRatio='none'%3E%3Cpath d='M0,17 C200,0 400,34 600,17 C800,0 1000,34 1200,17' stroke='%232E5F5A' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    opacity: 0.5;
+  }
+  .hero .brand-wordmark{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .hero .brand-en{
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 1.18rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mono-accent);
+    margin-top: 0.7rem;
+  }
+  .hero .brand-desc{
+    max-width: 44ch;
+    margin: 1.6rem auto 0;
+    color: var(--ink-soft);
+    font-size: 1.02rem;
+    line-height: 1.7;
+  }
+  .hero-meta{
+    display: flex;
+    justify-content: center;
+    gap: 2.2rem;
+    margin-top: 2.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .hero-meta strong{ display: block; color: var(--ink); font-size: 1.05rem; font-family: var(--font-body); }
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(249,251,248,0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .filter-bar input, .filter-bar select{
+    margin: 0;
+    background: var(--surface);
+    border-color: var(--line);
+    font-size: 0.9rem;
+  }
+  .filter-bar input[type="search"]{ flex: 2 1 240px; }
+  .filter-bar select{ flex: 1 1 170px; min-width: 158px; }
+  .filter-count{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--mono-accent);
+    white-space: nowrap;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.4rem;
+    padding: 2.5rem 0 5rem;
+  }
+  .card{
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 1.1rem 1.1rem 1.3rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover{ transform: translateY(-3px); border-color: var(--sage); }
+  .card-swatch{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 2px;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: flex-end;
+    padding: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: rgba(0,0,0,0.55);
+    letter-spacing: 0.05em;
+    overflow: hidden;
+  }
+  .card-icon{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    width: 46%;
+    color: rgba(32,36,31,0.4);
+  }
+  .card-icon svg, .detail-icon svg, .cart-item .ci-icon svg{
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .discount-tag{
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    background: var(--sage-deep);
+    color: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 0.18rem 0.42rem;
+    border-radius: 2px;
+  }
+  .wish-btn{
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(251,250,247,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    z-index: 2;
+    transition: transform 0.12s ease;
+  }
+  .wish-btn:hover{ transform: scale(1.08); }
+  .wish-btn svg{ width: 16px; height: 16px; stroke: var(--ink-soft); fill: none; stroke-width: 1.6; transition: fill 0.15s ease, stroke 0.15s ease; }
+  .wish-btn.active svg{ fill: var(--rose); stroke: var(--rose); }
+
+  .rank-badge{
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 2;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 0.35rem;
+    border-radius: 50%;
+    background: rgba(251,250,247,0.92);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rank-badge.top3{ background: var(--sage-deep); color: var(--surface); border-radius: 4px; min-width: 26px; }
+  .trend{ font-family: var(--font-mono); font-size: 0.68rem; margin-left: 0.3rem; }
+  .trend.up{ color: var(--sage-deep); }
+  .trend.down{ color: var(--rose); }
+  .trend.flat{ color: var(--mono-accent); }
+  .trend.new{ color: var(--rose); font-weight: 500; }
+
+  .rating-line{
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  .rating-line .star{ color: var(--sage-deep); margin-right: 0.25rem; }
+  .rating-line .review-count{ color: var(--mono-accent); margin-left: 0.25rem; }
+  .lot{ font-family: var(--font-mono); font-size: 0.68rem; color: var(--mono-accent); letter-spacing: 0.04em; }
+  .card h3{
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+    font-weight: 700;
+    margin: 0.35rem 0 0.2rem;
+    color: var(--ink);
+  }
+  .card .tags{ font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 0.7rem; }
+  .ship-chips{ display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.7rem; }
+  .chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .chip-free{ border-color: var(--sage); color: var(--sage-deep); }
+  .chip-arrive svg{ width: 11px; height: 11px; stroke: var(--ink-soft); fill: none; stroke-width: 1.8; }
+  .card .price{ margin-top: auto; display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
+  .price .original{ font-family: var(--font-mono); font-size: 0.78rem; color: var(--mono-accent); text-decoration: line-through; }
+  .price .percent{ font-family: var(--font-mono); font-size: 0.85rem; font-weight: 500; color: var(--rose); }
+  .price .final{ font-family: var(--font-mono); font-weight: 500; font-size: 0.95rem; color: var(--sage-deep); }
+
+  .empty{ text-align: center; padding: 4rem 1rem; color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.85rem; }
+
+  /* ---------- Detail modal ---------- */
+  dialog article{ max-width: 640px; background: var(--surface); }
+  .detail-swatch{ position: relative; aspect-ratio: 16/8; border-radius: 2px; margin-bottom: 1.2rem; overflow: hidden; }
+  .detail-icon{ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22%; color: rgba(32,36,31,0.4); }
+  .detail-lot{ font-family: var(--font-mono); font-size: 0.72rem; color: var(--mono-accent); letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+  dialog h2{ font-family: var(--font-display); font-weight: 700; margin-bottom: 0.2rem; }
+  .detail-price{ font-family: var(--font-mono); font-size: 1.15rem; color: var(--sage-deep); margin-bottom: 1rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+  .detail-price .original{ font-size: 0.85rem; color: var(--mono-accent); text-decoration: line-through; }
+  .detail-price .percent{ color: var(--rose); font-size: 0.95rem; }
+  .detail-desc{ color: var(--ink-soft); line-height: 1.7; }
+  .detail-specs{
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+  .detail-specs dt{ font-family: var(--font-mono); font-size: 0.7rem; color: var(--mono-accent); text-transform: uppercase; }
+  .detail-specs dd{ margin: 0; color: var(--ink); }
+
+  /* ---------- 전성분(INCI) ---------- */
+  .ingredient-block{ margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+  .ingredient-block h4, .review-section h4{
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--mono-accent);
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+  .ingredient-list{ display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .ingredient-chip{
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.2rem 0.5rem;
+  }
+  .ingredient-chip.hero{ color: var(--sage-deep); border-color: var(--sage); font-weight: 500; }
+
+  /* ---------- 리뷰 ---------- */
+  .review-section{ margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+  .review-form{ border: 1px solid var(--line); border-radius: 2px; padding: 0.9rem 1rem 1rem; margin-bottom: 1rem; background: var(--bg); }
+  .star-picker{ display: flex; gap: 0.25rem; margin-bottom: 0.7rem; }
+  .star-picker button{ background: none; border: none; cursor: pointer; padding: 0; line-height: 1; }
+  .star-picker svg{ width: 22px; height: 22px; fill: none; stroke: var(--mono-accent); stroke-width: 1.4; }
+  .star-picker button.filled svg{ fill: var(--sage-deep); stroke: var(--sage-deep); }
+  .review-textarea{
+    width: 100%;
+    min-height: 74px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.6rem 0.7rem;
+    background: var(--surface);
+    color: var(--ink);
+    resize: vertical;
+    margin-bottom: 0.7rem;
+  }
+  .photo-upload-row{ display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .photo-thumb{ position: relative; width: 56px; height: 56px; border-radius: 2px; overflow: hidden; border: 1px solid var(--line); }
+  .photo-thumb img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-thumb .photo-remove{
+    position: absolute; top: 1px; right: 1px;
+    width: 16px; height: 16px;
+    background: rgba(33,46,30,0.7);
+    color: var(--surface);
+    border: none; border-radius: 50%;
+    font-size: 0.62rem; line-height: 1; cursor: pointer;
+  }
+  .photo-add-btn{
+    width: 56px; height: 56px;
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    background: var(--surface);
+    color: var(--mono-accent);
+    font-size: 1.3rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .review-submit-btn{
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    font-weight: 500;
+    background: var(--sage-deep);
+    color: var(--surface);
+    border: none; border-radius: 2px;
+    padding: 0.55rem 1rem; cursor: pointer;
+  }
+  .review-form-error, .opt-error{
+    color: var(--rose);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+  .review-form-error.show, .opt-error.show{ display: block; }
+  .review-list{ display: flex; flex-direction: column; gap: 0.9rem; }
+  .review-item{ border-bottom: 1px solid var(--line); padding-bottom: 0.9rem; }
+  .review-item .review-stars{ color: var(--sage-deep); font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .review-item .review-date{ font-family: var(--font-mono); font-size: 0.7rem; color: var(--mono-accent); margin-left: 0.4rem; }
+  .review-item p{ font-size: 0.88rem; color: var(--ink); line-height: 1.55; margin: 0.3rem 0 0.5rem; }
+  .review-item .review-photos{ display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .review-item .review-photos img{ width: 56px; height: 56px; object-fit: cover; border-radius: 2px; border: 1px solid var(--line); }
+  .review-empty{ font-family: var(--font-mono); font-size: 0.8rem; color: var(--mono-accent); padding: 0.8rem 0; text-align: center; }
+
+  /* ---------- 재고 / 품절 ---------- */
+  .stock-badge{
+    position: absolute; inset: 0;
+    background: rgba(239,238,231,0.82);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem; font-weight: 500;
+    color: var(--ink-soft); letter-spacing: 0.05em;
+    z-index: 1;
+  }
+  .card.sold-out .card-icon, .card.sold-out .discount-tag{ opacity: 0.3; }
+  .card.sold-out h3, .card.sold-out .price, .card.sold-out .tags{ opacity: 0.45; }
+  .stock-low-text{ font-family: var(--font-mono); font-size: 0.72rem; color: var(--rose); margin-top: -0.3rem; margin-bottom: 0.6rem; }
+
+  /* ---------- 배송 안내 ---------- */
+  .delivery-info{
+    display: flex; gap: 0.6rem; align-items: flex-start;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .delivery-info svg{ width: 18px; height: 18px; flex-shrink: 0; margin-top: 0.1rem; stroke: var(--sage-deep); fill: none; stroke-width: 1.6; }
+  .delivery-info strong{ color: var(--ink); font-weight: 500; }
+
+  /* ---------- 구매 옵션 ---------- */
+  .purchase-options{ border: 1px solid var(--line); border-radius: 2px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
+  .opt-row{ display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; padding: 0.55rem 0; }
+  .opt-row + .opt-row{ border-top: 1px solid var(--line); }
+  .opt-label{
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--mono-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .qty-stepper{ display: flex; align-items: center; gap: 0.6rem; }
+  .qty-btn{
+    width: 26px; height: 26px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 2px; cursor: pointer;
+    font-family: var(--font-mono); font-size: 0.9rem; line-height: 1;
+  }
+  .qty-btn:hover{ border-color: var(--sage); }
+  .qty-value{ font-family: var(--font-mono); font-size: 0.9rem; min-width: 1.6rem; text-align: center; }
+  .opt-address{
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.4rem 0.6rem;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .ship-type-group{ display: flex; gap: 0.9rem; }
+  .ship-type-group label{ display: flex; align-items: center; gap: 0.35rem; font-size: 0.84rem; color: var(--ink); cursor: pointer; }
+  .opt-date{
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.35rem 0.5rem;
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  /* ---------- 담기 / 구매 버튼 ---------- */
+  .detail-actions{ display: flex; gap: 0.6rem; margin-bottom: 1.2rem; }
+  .btn-cart, .btn-buy{
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-cart{ background: var(--surface); border: 1px solid var(--sage-deep); color: var(--sage-deep); }
+  .btn-buy{ background: var(--sage-deep); border: 1px solid var(--sage-deep); color: var(--surface); }
+  .btn-cart:hover{ background: var(--bg); }
+  .btn-buy:hover{ opacity: 0.9; }
+  .btn-cart:disabled, .btn-buy:disabled{ opacity: 0.4; cursor: not-allowed; }
+  .detail-wish{
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    color: var(--ink-soft);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.45rem 0.8rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  .detail-wish svg{ width: 15px; height: 15px; stroke: var(--ink-soft); fill: none; stroke-width: 1.6; }
+  .detail-wish.active{ border-color: var(--rose); color: var(--rose); }
+  .detail-wish.active svg{ fill: var(--rose); stroke: var(--rose); }
+
+  /* ---------- 플로팅 카트/위시 버튼 ---------- */
+  .fab-row{ position: fixed; top: 0.6rem; right: 1.2rem; z-index: 20; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.6rem; max-width: calc(100vw - 2rem); }
+  .cart-fab, .wish-fab{
+    display: flex; align-items: center; gap: 0.4rem;
+    background: var(--ink);
+    color: var(--surface);
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .wish-fab{ background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+  .cart-fab svg, .wish-fab svg{ width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+  .cart-fab .cart-count, .wish-fab .wish-fab-count{
+    background: var(--rose);
+    color: var(--surface);
+    border-radius: 999px;
+    min-width: 18px; height: 18px;
+    font-size: 0.68rem;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 0.3rem;
+  }
+
+  /* ---------- 카트 / 위시 모달 ---------- */
+  #cart-modal article, #wishlist-modal article{ max-width: 480px; background: var(--surface); }
+  #cart-modal header, #wishlist-modal header{ display: flex; align-items: center; justify-content: space-between; }
+  #cart-modal header strong, #wishlist-modal header strong{ font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+  .ci-mini-buy{
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--sage-deep);
+    border: 1px solid var(--sage);
+    border-radius: 2px;
+    padding: 0.25rem 0.5rem;
+    background: none;
+    cursor: pointer;
+    margin-left: 0.5rem;
+  }
+  .cart-item{ display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
+  .cart-item .ci-icon{ width: 36px; height: 36px; flex-shrink: 0; color: rgba(32,36,31,0.45); }
+  .cart-item .ci-info{ flex: 1; }
+  .cart-item .ci-name{ font-size: 0.9rem; color: var(--ink); margin-bottom: 0.2rem; }
+  .cart-item .ci-meta{ font-family: var(--font-mono); font-size: 0.76rem; color: var(--mono-accent); }
+  .cart-item .ci-remove{ background: none; border: none; cursor: pointer; font-family: var(--font-mono); font-size: 0.72rem; color: var(--rose); }
+  .cart-empty{ text-align: center; padding: 2.5rem 1rem; color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.85rem; }
+  .cart-total{
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 1rem 0 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  .cart-total strong{ font-size: 1.15rem; color: var(--sage-deep); }
+  .cart-checkout-btn{
+    width: 100%;
+    margin-top: 0.8rem;
+    background: var(--sage-deep);
+    color: var(--surface);
+    border: none; border-radius: 2px;
+    padding: 0.8rem;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer;
+  }
+  .order-success{ text-align: center; padding: 2rem 1rem; }
+  .order-success svg{ width: 40px; height: 40px; stroke: var(--sage-deep); fill: none; stroke-width: 1.6; margin-bottom: 0.8rem; }
+  .order-success h3{ font-family: var(--font-display); font-weight: 700; margin-bottom: 0.4rem; }
+  .order-success p{ color: var(--ink-soft); font-size: 0.88rem; }
+
+  /* ---------- 로그인 / 회원가입 ---------- */
+  .auth-fab svg{ width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+  #auth-modal article{ max-width: 400px; background: var(--surface); }
+  #auth-modal header{ display: flex; align-items: center; justify-content: space-between; }
+  #auth-modal header strong{ font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+  .auth-tabs{ display: flex; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--line); }
+  .auth-tabs button{
+    flex: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--mono-accent);
+    padding: 0.6rem 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .auth-tabs button.active{ color: var(--ink); border-bottom-color: var(--sage-deep); font-weight: 500; }
+  #auth-form label{ display: block; font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 0.8rem; }
+  #auth-form input{ margin: 0.25rem 0 0; background: var(--surface); border-color: var(--line); font-size: 0.9rem; }
+  .auth-error{ color: var(--rose); font-family: var(--font-mono); font-size: 0.74rem; margin: 0.2rem 0 0.6rem; display: none; }
+  .auth-error.show{ display: block; }
+  .auth-submit-btn{
+    width: 100%;
+    background: var(--sage-deep);
+    color: var(--surface);
+    border: none;
+    border-radius: 2px;
+    padding: 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .auth-greeting{ padding: 0.5rem 0 1.2rem; font-size: 0.95rem; color: var(--ink); }
+  .auth-greeting strong{ font-family: var(--font-display); }
+  .auth-greeting .auth-email{ font-family: var(--font-mono); font-size: 0.76rem; color: var(--mono-accent); margin-top: 0.3rem; }
+
+  footer.site-footer{
+    border-top: 1px solid var(--line);
+    padding: 2rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--mono-accent);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card{ transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="fab-row">
+  <button class="wish-fab auth-fab" id="auth-fab" type="button" aria-label="로그인 / 회원가입">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+    <span id="auth-fab-label">로그인</span>
+  </button>
+  <button class="wish-fab" id="wish-fab" type="button" aria-label="위시리스트 열기">
+    <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.8.7 6.4 3.2C14.6 4.7 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.3 12 21 12 21z"/></svg>
+    찜
+    <span class="wish-fab-count" id="wish-fab-count">0</span>
+  </button>
+  <button class="cart-fab" id="cart-fab" type="button" aria-label="장바구니 열기">
+    <svg viewBox="0 0 24 24"><path d="M4 6h2l1.5 11h11L20 9H7"/><circle cx="10" cy="20" r="1.2"/><circle cx="17" cy="20" r="1.2"/></svg>
+    장바구니
+    <span class="cart-count" id="cart-count">0</span>
+  </button>
+</div>
+
+<main class="container">
+
+  <section class="hero">
+    <h1 class="brand-wordmark">젊음의 샘물</h1>
+    <span class="brand-en">Spring Water of Youth</span>
+    <p class="brand-desc">피부 컨디션에 가장 좋은 상태로. 자극은 줄이고 근거는 뚜렷한 성분으로, 매일의 피부에 잔잔한 물기를 더합니다.</p>
+    <div class="hero-meta">
+      <div><strong id="stat-count">32</strong>개 제품</div>
+      <div><strong>5</strong>개 카테고리</div>
+      <div><strong>5</strong>개 피부타입 대응</div>
+    </div>
+  </section>
+
+  <div class="filter-bar">
+    <input type="search" id="f-search" placeholder="제품명, 성분으로 검색…">
+    <select id="f-category"><option value="">전체 카테고리</option></select>
+    <select id="f-skin"><option value="">전체 피부타입</option></select>
+    <select id="f-price">
+      <option value="">전체 가격대</option>
+      <option value="0-20000">2만원 이하</option>
+      <option value="20000-40000">2~4만원</option>
+      <option value="40000-999999">4만원 이상</option>
+    </select>
+    <select id="f-sort">
+      <option value="default">기본순</option>
+      <option value="popular">인기순</option>
+      <option value="rating">평점순</option>
+      <option value="price-asc">가격 낮은순</option>
+      <option value="price-desc">가격 높은순</option>
+    </select>
+    <span class="filter-count" id="f-count"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none;">— 조건에 맞는 제품이 없습니다 —</div>
+
+</main>
+
+<dialog id="detail-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="detail-close"></button></header>
+    <div id="detail-body"></div>
+  </article>
+</dialog>
+
+<dialog id="cart-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="cart-close"></button><strong>장바구니</strong></header>
+    <div id="cart-body"></div>
+  </article>
+</dialog>
+
+<dialog id="wishlist-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="wishlist-close"></button><strong>찜한 제품</strong></header>
+    <div id="wishlist-body"></div>
+  </article>
+</dialog>
+
+<dialog id="auth-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="auth-close"></button><strong id="auth-modal-title">로그인</strong></header>
+    <div id="auth-body"></div>
+  </article>
+</dialog>
+
+<footer class="site-footer container">
+  <span>젊음의 샘물 · PROTOTYPE STAGE 1</span>
+  <span>DATA: MOCK · 32 SKUs</span>
+</footer>
+
+<script>
+/* =========================================================
+   가짜 제품 데이터 32개.
+   다음 단계에서 이 배열을 CSV/시트로 교체할 때
+   필드명(id, name, category, skinType, price ...)만 유지하면
+   아래 렌더링 로직은 그대로 동작합니다.
+   ========================================================= */
+const PRODUCTS = [
+  { id:1,  name:"수분 진정 크림", category:"스킨케어", skinType:"건성", price:32000, originalPrice:38000, icon:'jar', volume:"50ml", lot:"LOT 24A-011", rating:4.49, reviewCount:917, trend:0, swatch:"#DCE3D2", ingredients:["세라마이드엔피","판테놀","스쿠알란","부틸렌글라이콜","카보머","1,2-헥산다이올","다이메티콘","토코페롤"], stock:263, desc:"세라마이드와 판테놀이 수분 장벽을 채우고, 번들거림 없이 이어지게 마무리되는 진정 크림." },
+  { id:2,  name:"약산성 젤 클렌저", category:"클렌징", skinType:"전체", price:18000, icon:'pump', volume:"150ml", lot:"LOT 24A-014", rating:4.36, reviewCount:2687, trend:4, swatch:"#CBD8CE", ingredients:["코카미도프로필베타인","이눌린","1,2-헥산다이올","부틸렌글라이콜","글리세린","알란토인","판테놀"], stock:319, desc:"pH 5.5 약산성 포뮬러로 피부 장벽을 지키며 부드럽게 세안하는 데일리 클렌저." },
+  { id:3,  name:"티트리 트러블 앰플", category:"스킨케어", skinType:"지성", price:27000, originalPrice:34000, icon:'dropper', volume:"30ml", lot:"LOT 24B-002", rating:4.55, reviewCount:1285, trend:0, swatch:"#B9C7A9", ingredients:["티트리잎오일","마데카소사이드","나이아신아마이드","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:243, desc:"티트리 오일 2% 함유, 트러블 부위를 진정시키고 유수분 밸런스를 맞춰주는 앰플." },
+  { id:4,  name:"글로우 카밍 선크림", category:"스킨케어", skinType:"전체", price:24000, icon:'tube', volume:"50ml", lot:"LOT 24B-007", rating:4.37, reviewCount:1214, trend:0, swatch:"#EADFCB", ingredients:["티타늄디옥사이드","나이아신아마이드","알란토인","판테놀","글리세린","다이메티콘","에틸헥실메톡시신나메이트"], stock:352, desc:"SPF50+ PA++++, 백탁 없이 은은한 광채를 더하는 데일리 자외선 차단제." },
+  { id:5,  name:"미네랄 립 틴트", category:"메이크업", skinType:"전체", price:16000, originalPrice:19000, icon:'stick', volume:"4g", lot:"LOT 24B-019", rating:4.33, reviewCount:845, trend:-3, swatch:"#C9948A", ingredients:["칸데릴라왁스","호호바오일","마이카","시어버터","토코페롤","1,2-헥산다이올"], stock:30, desc:"천연 미네랄 안료로 입술 결에 따라 자연스럽게 스미는 세미매트 틴트." },
+  { id:6,  name:"콜라겐 아이크림", category:"스킨케어", skinType:"건성", price:38000, originalPrice:49000, icon:'jar', volume:"20ml", lot:"LOT 24C-003", rating:4.64, reviewCount:6376, trend:1, swatch:"#E4D9C6", ingredients:["가수분해콜라겐","아데노신","펩타이드","글리세린","다이메티콘","토코페롤","판테놀"], stock:39, desc:"저분자 콜라겐이 눈가 결에 탄력감을 더해주는 아이 전용 크림." },
+  { id:7,  name:"클레이 모공 팩", category:"스킨케어", skinType:"지성", price:21000, icon:'tube', volume:"100ml", lot:"LOT 24C-010", rating:4.61, reviewCount:8506, trend:-3, swatch:"#B0A79A", ingredients:["카올린","벤토나이트","살리실릭애씨드","글리세린","알란토인","판테놀"], stock:356, desc:"카올린·벤토나이트가 모공 속 피지와 각질을 흡착해내는 워시오프 팩." },
+  { id:8,  name:"저자극 클렌징 오일", category:"클렌징", skinType:"민감성", price:23000, icon:'dropper', volume:"200ml", lot:"LOT 24C-015", rating:4.58, reviewCount:2156, trend:0, swatch:"#EFE8D6", ingredients:["포도씨오일","해바라기씨오일","비타민E","글리세린","1,2-헥산다이올","토코페롤"], stock:122, desc:"무향·무색소 포뮬러로 메이크업까지 자극 없이 녹여내는 클렌징 오일." },
+  { id:9,  name:"시카 리페어 크림", category:"스킨케어", skinType:"민감성", price:29000, originalPrice:34000, icon:'jar', volume:"50ml", lot:"LOT 24D-001", rating:4.72, reviewCount:5935, trend:-3, swatch:"#C4D0BC", ingredients:["병풀추출물","마데카소사이드","아시아티코사이드","판테놀","글리세린","알란토인"], stock:182, desc:"병풀 추출물이 예민해진 피부를 진정시키고 장벽을 회복시키는 크림." },
+  { id:10, name:"쿠션 파운데이션", category:"메이크업", skinType:"전체", price:34000, icon:'compact', volume:"15g", lot:"LOT 24D-006", rating:4.74, reviewCount:3547, trend:-3, swatch:"#E8D4BC", ingredients:["티타늄디옥사이드","실리카","나이아신아마이드","글리세린","다이메티콘","1,2-헥산다이올"], stock:273, desc:"피부 톤을 자연스럽게 보정하며 SPF50+로 자외선까지 커버하는 쿠션." },
+  { id:11, name:"나이아신아마이드 세럼", category:"스킨케어", skinType:"복합성", price:26000, originalPrice:32000, icon:'dropper', volume:"30ml", lot:"LOT 24D-012", rating:4.39, reviewCount:25138, trend:5, swatch:"#D9DED0", ingredients:["나이아신아마이드","아연피시디온","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:331, desc:"나이아신아마이드 10%로 피부 톤과 결을 정돈해주는 브라이트닝 세럼." },
+  { id:12, name:"밤 클렌저", category:"클렌징", skinType:"건성", price:25000, icon:'jar', volume:"80ml", lot:"LOT 24D-018", rating:4.64, reviewCount:6589, trend:-4, swatch:"#D8C8A8", ingredients:["시어버터","호호바에스터","글리세린","1,2-헥산다이올","토코페롤","다이메티콘"], stock:190, desc:"체온에 녹는 밤 텍스처로 각질까지 부드럽게 정리하는 클렌징 밤." },
+  { id:13, name:"레티놀 나이트 세럼", category:"스킨케어", skinType:"복합성", price:41000, originalPrice:53000, icon:'dropper', volume:"30ml", lot:"LOT 24E-002", rating:4.34, reviewCount:8214, trend:0, swatch:"#CFC2B6", ingredients:["레티놀","스쿠알란","토코페롤","판테놀","글리세린","1,2-헥산다이올"], stock:0, desc:"저자극 레티놀 캡슐화 기술로 밤사이 결 정돈을 돕는 나이트 세럼." },
+  { id:14, name:"매트 쿠션", category:"메이크업", skinType:"지성", price:33000, originalPrice:40000, icon:'compact', volume:"15g", lot:"LOT 24E-009", rating:4.34, reviewCount:5730, trend:-3, swatch:"#DCC6AC", ingredients:["실리카","티타늄디옥사이드","나이아신아마이드","글리세린","다이메티콘","1,2-헥산다이올"], stock:356, desc:"피지 컨트롤 파우더가 배합되어 번들거림을 잡아주는 매트 마무리 쿠션." },
+  { id:15, name:"히알루론산 토너", category:"스킨케어", skinType:"건성", price:19000, icon:'pump', volume:"200ml", lot:"LOT 24E-014", rating:4.31, reviewCount:4202, trend:1, swatch:"#E1E7DC", ingredients:["히알루론산","베타인","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:271, desc:"5종 히알루론산이 즉각적인 수분감을 채워주는 첫 단계 토너." },
+  { id:16, name:"선물용 미니 키트", category:"스킨케어", skinType:"전체", price:45000, originalPrice:60000, icon:'box', volume:"5종", lot:"LOT 24E-021", rating:4.43, reviewCount:723, trend:-4, swatch:"#EDE3CE", ingredients:["세라마이드엔피","히알루론산","판테놀","나이아신아마이드","글리세린","1,2-헥산다이올"], stock:7, desc:"베스트 5종을 미니 사이즈로 구성한 트라이얼·선물용 세트." },
+  { id:17, name:"진정 스팟 패치", category:"스킨케어", skinType:"지성", price:9000, icon:'patch', volume:"24매", lot:"LOT 24F-004", rating:4.35, reviewCount:2139, trend:0, swatch:"#C9CFC1", ingredients:["하이드로콜로이드","티트리잎오일","판테놀","알란토인","1,2-헥산다이올"], stock:4, desc:"트러블 부위에 붙여 밤사이 진정시켜주는 하이드로콜로이드 패치." },
+  { id:18, name:"브로우 마스카라", category:"메이크업", skinType:"전체", price:12000, icon:'stick', volume:"7ml", lot:"LOT 24F-008", rating:4.62, reviewCount:6702, trend:0, swatch:"#A99C8D", ingredients:["칸데릴라왁스","마이카","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:392, desc:"자연스러운 결 표현과 색을 더하는 브로우 전용 마스카라." },
+  { id:19, name:"딥 슬리핑 마스크", category:"스킨케어", skinType:"건성", price:31000, originalPrice:36000, icon:'jar', volume:"100ml", lot:"LOT 24F-013", rating:4.57, reviewCount:918, trend:2, swatch:"#DCD3E0", ingredients:["세라마이드엔피","스쿠알란","판테놀","글리세린","알란토인","토코페롤"], stock:265, desc:"밤사이 수분막을 형성해 다음날 아침까지 이어지는 슬리핑 팩." },
+  { id:20, name:"약산성 폼 클렌저", category:"클렌징", skinType:"복합성", price:17000, icon:'pump', volume:"120ml", lot:"LOT 24F-020", rating:4.31, reviewCount:8975, trend:4, swatch:"#D6DED2", ingredients:["코카미도프로필베타인","글리세릴스테아레이트","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:238, desc:"조밀한 거품으로 피지를 씻어내고 수분감을 남기는 약산성 폼 클렌저." },
+
+  { id:21, name:"쿨링 두피 토너", category:"헤어케어", skinType:"지성", price:22000, icon:'pump', volume:"400ml", lot:"LOT 24G-002", rating:4.62, reviewCount:3644, trend:'NEW', swatch:"#C7D3CE", ingredients:["멘톨","이눌린","판테놀","토코페롤","글리세린","1,2-헥산다이올"], stock:389, desc:"멘톨 성분이 두피에 청량감을 주고 유분을 잡아주는 쿨링 토너." },
+  { id:22, name:"단백질 헤어 트리트먼트", category:"헤어케어", skinType:"건성", price:26000, originalPrice:32000, icon:'tube', volume:"250ml", lot:"LOT 24G-006", rating:4.58, reviewCount:7985, trend:0, swatch:"#DAD0BC", ingredients:["가수분해케라틴","가수분해실크","판테놀","세틸알코올","글리세린","시어버터"], stock:349, desc:"손상모에 단백질을 채워 갈라짐을 줄이고 결을 매끈하게 하는 트리트먼트." },
+  { id:23, name:"두피 앰플", category:"헤어케어", skinType:"민감성", price:34000, icon:'dropper', volume:"80ml", lot:"LOT 24G-011", rating:4.54, reviewCount:1591, trend:'NEW', swatch:"#CBD6C1", ingredients:["판테놀","비오틴","나이아신아마이드","글리세린","알란토인","1,2-헥산다이올"], stock:2, desc:"자극 없이 두피 밸런스를 잡아주는 저자극 두피 전용 앰플." },
+  { id:24, name:"실리콘프리 컨디셔너", category:"헤어케어", skinType:"전체", price:19000, icon:'pump', volume:"300ml", lot:"LOT 24G-014", rating:4.34, reviewCount:575, trend:5, swatch:"#E6DCC8", ingredients:["세틸알코올","베헨트라이모늄클로라이드","시어버터","글리세린","판테놀","아르간오일"], stock:56, desc:"실리콘 없이 모발의 수분막을 채워 가볍게 정돈해주는 컨디셔너." },
+  { id:25, name:"헤어 오일 세럼", category:"헤어케어", skinType:"건성", price:23000, originalPrice:27000, icon:'dropper', volume:"80ml", lot:"LOT 24G-018", rating:4.33, reviewCount:300, trend:0, swatch:"#E9D9B8", ingredients:["아르간오일","호호바오일","동백오일","토코페롤","향료","1,2-헥산다이올"], stock:132, desc:"모발 끝 갈라짐과 정전기를 잡아주는 가벼운 마감 오일." },
+
+  { id:26, name:"바디 로션", category:"바디케어", skinType:"건성", price:20000, icon:'pump', volume:"300ml", lot:"LOT 24H-001", rating:4.67, reviewCount:588, trend:'NEW', swatch:"#EAE1CE", ingredients:["시어버터","세라마이드엔피","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:301, desc:"시어버터가 하루 종일 촉촉함을 이어주는 데일리 바디 로션." },
+  { id:27, name:"각질 제거 바디 스크럽", category:"바디케어", skinType:"전체", price:24000, originalPrice:30000, icon:'jar', volume:"250ml", lot:"LOT 24H-005", rating:4.60, reviewCount:2766, trend:4, swatch:"#D8C9AE", ingredients:["설탕","호호바에스터","시어버터","글리세린","토코페롤","1,2-헥산다이올"], stock:52, desc:"입자가 고운 슈가 스크럽으로 묵은 각질을 부드럽게 밀어내는 스크럽." },
+  { id:28, name:"항균 핸드워시", category:"바디케어", skinType:"지성", price:16000, originalPrice:20000, icon:'pump', volume:"400ml", lot:"LOT 24H-009", rating:4.51, reviewCount:1874, trend:1, swatch:"#C4D1CB", ingredients:["코카미도프로필베타인","티트리잎오일","글리세린","판테놀","시트릭애씨드","1,2-헥산다이올"], stock:41, desc:"티트리 성분으로 산뜻하게 세정하며 촉촉함을 남기는 핸드워시." },
+  { id:29, name:"풋 & 힐 크림", category:"바디케어", skinType:"건성", price:14000, icon:'tube', volume:"100ml", lot:"LOT 24H-013", rating:4.55, reviewCount:4116, trend:5, swatch:"#EDE2CB", ingredients:["시어버터","우레아","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:301, desc:"거칠어진 발 각질에 수분과 유분을 채워주는 고보습 풋 크림." },
+  { id:30, name:"롤온 데오도런트", category:"바디케어", skinType:"전체", price:11000, icon:'stick', volume:"50ml", lot:"LOT 24H-017", rating:4.52, reviewCount:3886, trend:0, swatch:"#DCE0D6", ingredients:["베이킹소다","포타슘알럼","글리세린","알란토인","향료","1,2-헥산다이올"], stock:0, desc:"자극이 적은 성분으로 땀과 냄새를 케어하는 롤온 데오도런트." },
+  { id:31, name:"바디 미스트", category:"바디케어", skinType:"전체", price:18000, originalPrice:22000, icon:'spray', volume:"150ml", lot:"LOT 24H-021", rating:4.48, reviewCount:1369, trend:'NEW', swatch:"#DFD2DE", ingredients:["우드앰버향료","알로에베라추출물","판테놀","토코페롤","글리세린","1,2-헥산다이올"], stock:201, desc:"은은하게 퍼지는 우디 플로럴 향으로 산뜻하게 마무리하는 바디 미스트." },
+  { id:32, name:"헤어 스칼프 스케일러", category:"헤어케어", skinType:"지성", price:21000, icon:'pump', volume:"150ml", lot:"LOT 24H-024", rating:4.43, reviewCount:6320, trend:2, swatch:"#C9C0A9", ingredients:["이눌린","멘톨","살리실릭애씨드","글리세린","판테놀","1,2-헥산다이올"], stock:249, desc:"두피의 묵은 각질과 잔여물을 씻어내는 주 1~2회 스케일링 케어." },
+];
+
+/* ---------------- 렌더링 로직 ---------------- */
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const fSearch = document.getElementById('f-search');
+const fCategory = document.getElementById('f-category');
+const fSkin = document.getElementById('f-skin');
+const fPrice = document.getElementById('f-price');
+const fSort = document.getElementById('f-sort');
+const fCount = document.getElementById('f-count');
+
+function fillOptions(selectEl, values){
+  [...new Set(values)].sort().forEach(v=>{
+    const opt = document.createElement('option');
+    opt.value = v; opt.textContent = v;
+    selectEl.appendChild(opt);
+  });
+}
+fillOptions(fCategory, PRODUCTS.map(p=>p.category));
+fillOptions(fSkin, PRODUCTS.map(p=>p.skinType));
+document.getElementById('stat-count').textContent = PRODUCTS.length;
+
+function formatPrice(n){ return n.toLocaleString('ko-KR') + '원'; }
+
+/* ---------------- 아이콘 (라인아트) ---------------- */
+const ICONS = {
+  jar: `<svg viewBox="0 0 64 64"><rect x="16" y="8" width="32" height="6" rx="2"/><rect x="14" y="16" width="36" height="38" rx="6"/><line x1="14" y1="26" x2="50" y2="26"/></svg>`,
+  dropper: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="7" rx="6" ry="4"/><rect x="28" y="10" width="8" height="7"/><rect x="21" y="17" width="22" height="6" rx="1"/><rect x="19" y="23" width="26" height="31" rx="4"/></svg>`,
+  tube: `<svg viewBox="0 0 64 64"><path d="M22 10h20l-2 8H24l-2-8z"/><rect x="18" y="18" width="28" height="34" rx="5"/><path d="M18 46 L12 54 H52 L46 46"/><rect x="27" y="4" width="10" height="7" rx="1.5"/></svg>`,
+  pump: `<svg viewBox="0 0 64 64"><rect x="16" y="22" width="32" height="34" rx="4"/><rect x="24" y="10" width="16" height="12" rx="2"/><path d="M32 10V4h14v5"/><circle cx="46" cy="5" r="2.4"/></svg>`,
+  compact: `<svg viewBox="0 0 64 64"><rect x="10" y="24" width="44" height="30" rx="4"/><path d="M10 26 L14 10 H50 L54 26"/><circle cx="32" cy="39" r="10"/></svg>`,
+  stick: `<svg viewBox="0 0 64 64"><rect x="24" y="6" width="16" height="14" rx="2"/><path d="M26 20h12l-2 30a4 4 0 0 1-4 4h0a4 4 0 0 1-4-4l-2-30z"/></svg>`,
+  patch: `<svg viewBox="0 0 64 64"><rect x="10" y="10" width="44" height="44" rx="8"/><circle cx="24" cy="24" r="5"/><circle cx="40" cy="24" r="5"/><circle cx="32" cy="40" r="5"/></svg>`,
+  spray: `<svg viewBox="0 0 64 64"><rect x="18" y="24" width="24" height="32" rx="4"/><rect x="24" y="14" width="12" height="12" rx="2"/><path d="M36 18h10l4-4M46 18l4 4M46 14l6-2"/></svg>`,
+  box: `<svg viewBox="0 0 64 64"><rect x="10" y="20" width="44" height="34" rx="3"/><path d="M10 30h44"/><path d="M32 20v34"/><path d="M22 20c0-6 4-10 10-10s10 4 10 10"/></svg>`,
+};
+function iconMarkup(type){ return ICONS[type] || ICONS.jar; }
+
+/* ---------------- 위시리스트 ---------------- */
+const WISH_KEY = 'ysw-wishlist';
+function getWishSet(){
+  try{ return new Set(JSON.parse(localStorage.getItem(WISH_KEY) || '[]')); }
+  catch(e){ return new Set(); }
+}
+function saveWishSet(set){
+  localStorage.setItem(WISH_KEY, JSON.stringify([...set]));
+  updateWishBadge();
+}
+function toggleWish(id){
+  const set = getWishSet();
+  set.has(id) ? set.delete(id) : set.add(id);
+  saveWishSet(set);
+  return set.has(id);
+}
+function updateWishBadge(){
+  const el = document.getElementById('wish-fab-count');
+  if(el) el.textContent = getWishSet().size;
+}
+const HEART_SVG = `<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.8.7 6.4 3.2C14.6 4.7 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.3 12 21 12 21z"/></svg>`;
+
+function priceMarkup(p){
+  if(p.originalPrice && p.originalPrice > p.price){
+    const percent = Math.round((1 - p.price / p.originalPrice) * 100);
+    return `<span class="original">${formatPrice(p.originalPrice)}</span><span class="percent">${percent}%</span><span class="final">${formatPrice(p.price)}</span>`;
+  }
+  return `<span class="final">${formatPrice(p.price)}</span>`;
+}
+function ratingMarkup(p){
+  return `<span class="star">★</span>${p.rating.toFixed(2)}<span class="review-count">(${p.reviewCount.toLocaleString('ko-KR')})</span>`;
+}
+function trendMarkup(p){
+  if(p.trend === 'NEW') return `<span class="trend new">NEW</span>`;
+  if(p.trend > 0) return `<span class="trend up">▲${p.trend}</span>`;
+  if(p.trend < 0) return `<span class="trend down">▼${Math.abs(p.trend)}</span>`;
+  return `<span class="trend flat">—</span>`;
+}
+
+/* ---------------- 장바구니 ---------------- */
+/* cart shape: { [productId]: { qty, shipType: 'now'|'scheduled', shipDate: 'YYYY-MM-DD'|null } } */
+const CART_KEY = 'ysw-cart';
+function getCart(){
+  try{ return JSON.parse(localStorage.getItem(CART_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveCart(cart){
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateCartBadge();
+}
+function addToCart(id, qty, shipType, shipDate){
+  const cart = getCart();
+  const existing = cart[id];
+  cart[id] = {
+    qty: (existing ? existing.qty : 0) + qty,
+    shipType,
+    shipDate: shipType === 'scheduled' ? shipDate : null,
+  };
+  saveCart(cart);
+}
+function removeFromCart(id){
+  const cart = getCart();
+  delete cart[id];
+  saveCart(cart);
+}
+function cartItemCount(){
+  return Object.values(getCart()).reduce((sum, item)=>sum + item.qty, 0);
+}
+function updateCartBadge(){
+  document.getElementById('cart-count').textContent = cartItemCount();
+}
+
+/* ---------------- 배송지 ---------------- */
+const ADDRESS_KEY = 'ysw-address';
+const DEFAULT_ADDRESS = '서울특별시 강남구 테헤란로 123, 4층';
+function getAddress(){ return localStorage.getItem(ADDRESS_KEY) || DEFAULT_ADDRESS; }
+function saveAddress(addr){ localStorage.setItem(ADDRESS_KEY, addr); }
+
+/* ---------------- 리뷰 ---------------- */
+const REVIEW_KEY = 'ysw-reviews';
+function getAllReviews(){
+  try{ return JSON.parse(localStorage.getItem(REVIEW_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function getReviews(productId){
+  return getAllReviews()[productId] || [];
+}
+function addReview(productId, review){
+  const all = getAllReviews();
+  if(!all[productId]) all[productId] = [];
+  all[productId].unshift(review);
+  localStorage.setItem(REVIEW_KEY, JSON.stringify(all));
+}
+/* 업로드 이미지를 캔버스로 축소해 용량을 줄인 뒤 base64로 반환 */
+function resizeImageFile(file, maxSize=480){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let { width, height } = img;
+        if(width > height && width > maxSize){
+          height = Math.round(height * (maxSize / width));
+          width = maxSize;
+        } else if(height > maxSize){
+          width = Math.round(width * (maxSize / height));
+          height = maxSize;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function fmtReviewDate(iso){
+  const d = new Date(iso);
+  return `${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+function starsMarkup(rating){
+  return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+}
+
+/* ---------------- 배송 예정일 계산 ---------------- */
+const CUTOFF_HOUR = 15; // 오후 3시 이전 주문 시 당일 출고
+const WEEKDAY_KR = ['일','월','화','수','목','금','토'];
+function fmtDateLong(d){ return `${d.getMonth()+1}월 ${d.getDate()}일`; }
+function fmtDateShort(d){ return `${d.getMonth()+1}.${d.getDate()}(${WEEKDAY_KR[d.getDay()]})`; }
+function toISODate(d){
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function tomorrowISO(){
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return toISODate(d);
+}
+function deliveryEstimate(){
+  const now = new Date();
+  const shipsToday = now.getHours() < CUTOFF_HOUR;
+  const shipDate = new Date(now);
+  if(!shipsToday) shipDate.setDate(shipDate.getDate() + 1);
+  const arriveDate = new Date(shipDate);
+  arriveDate.setDate(arriveDate.getDate() + 1);
+  return {
+    shipLabel: shipsToday ? '오늘' : '내일',
+    arriveText: `${fmtDateLong(arriveDate)} 도착 예정`,
+    arriveShort: `${fmtDateShort(arriveDate)} 도착`,
+  };
+}
+function scheduledLabel(isoStr){
+  if(!isoStr) return '';
+  const d = new Date(isoStr + 'T00:00:00');
+  return `${fmtDateLong(d)}(${WEEKDAY_KR[d.getDay()]}) 희망`;
+}
+const TRUCK_SVG = `<svg viewBox="0 0 24 24"><rect x="1" y="7" width="13" height="9"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>`;
+const STAR_SVG = `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17.6l-6.1 3.4 1.5-6.8L2.2 9.5l6.9-.7z"/></svg>`;
+
+function applyFilters(){
+  const q = fSearch.value.trim().toLowerCase();
+  const cat = fCategory.value;
+  const skin = fSkin.value;
+  const priceRange = fPrice.value;
+
+  let filtered = PRODUCTS.filter(p=>{
+    const matchesQuery = !q
+      || p.name.toLowerCase().includes(q)
+      || p.desc.toLowerCase().includes(q)
+      || p.ingredients.some(ing=>ing.toLowerCase().includes(q));
+    const matchesCat = !cat || p.category === cat;
+    const matchesSkin = !skin || p.skinType === skin;
+    let matchesPrice = true;
+    if(priceRange){
+      const [min, max] = priceRange.split('-').map(Number);
+      matchesPrice = p.price >= min && p.price <= max;
+    }
+    return matchesQuery && matchesCat && matchesSkin && matchesPrice;
+  });
+
+  const sortMode = fSort.value;
+  const isRanked = sortMode === 'popular' || sortMode === 'rating';
+  if(sortMode === 'popular') filtered.sort((a,b)=>b.reviewCount - a.reviewCount);
+  else if(sortMode === 'rating') filtered.sort((a,b)=>b.rating - a.rating);
+  else if(sortMode === 'price-asc') filtered.sort((a,b)=>a.price - b.price);
+  else if(sortMode === 'price-desc') filtered.sort((a,b)=>b.price - a.price);
+
+  renderGrid(filtered, isRanked);
+  fCount.textContent = `${filtered.length} / ${PRODUCTS.length}`;
+}
+
+function renderGrid(list, isRanked){
+  grid.innerHTML = '';
+  empty.style.display = list.length ? 'none' : 'block';
+  const wishSet = getWishSet();
+  const delivery = deliveryEstimate();
+  list.forEach((p, idx)=>{
+    const isDiscounted = p.originalPrice && p.originalPrice > p.price;
+    const isWished = wishSet.has(p.id);
+    const isSoldOut = p.stock === 0;
+    const isLowStock = !isSoldOut && p.stock < 10;
+    const rank = idx + 1;
+    const card = document.createElement('div');
+    card.className = `card${isSoldOut ? ' sold-out' : ''}`;
+    card.innerHTML = `
+      <div class="card-swatch" style="background:${p.swatch}">
+        ${isSoldOut ? '<span class="stock-badge">품절</span>' : ''}
+        ${isDiscounted ? '<span class="discount-tag">SALE</span>' : ''}
+        <span class="card-icon">${iconMarkup(p.icon)}</span>
+        ${p.volume}
+      </div>
+      ${isRanked ? `<span class="rank-badge${rank<=3 ? ' top3' : ''}">${rank}</span>` : ''}
+      <button class="wish-btn${isWished ? ' active' : ''}" aria-label="위시리스트에 담기" type="button">${HEART_SVG}</button>
+      <div class="lot">${p.lot} ${trendMarkup(p)}</div>
+      <h3>${p.name}</h3>
+      <div class="tags">${p.category} · ${p.skinType}</div>
+      <div class="ship-chips">
+        <span class="chip chip-free">무료배송</span>
+        <span class="chip chip-arrive">${TRUCK_SVG}${delivery.arriveShort}</span>
+      </div>
+      <div class="rating-line">${ratingMarkup(p)}</div>
+      ${isLowStock ? `<div class="stock-low-text">품절 임박 · ${p.stock}개 남음</div>` : ''}
+      <div class="price">${priceMarkup(p)}</div>
+    `;
+    card.addEventListener('click', ()=>openDetail(p.id));
+    const wishBtn = card.querySelector('.wish-btn');
+    wishBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const active = toggleWish(p.id);
+      wishBtn.classList.toggle('active', active);
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* ---------------- 상세 모달 ---------------- */
+const modal = document.getElementById('detail-modal');
+const detailBody = document.getElementById('detail-body');
+document.getElementById('detail-close').addEventListener('click', ()=>modal.close());
+
+function openDetail(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p) return;
+  const isWished = getWishSet().has(p.id);
+  const delivery = deliveryEstimate();
+  const minDate = tomorrowISO();
+  const isSoldOut = p.stock === 0;
+  const isLowStock = !isSoldOut && p.stock < 10;
+  const ingredientChips = p.ingredients.map((ing, i)=>
+    `<span class="ingredient-chip${i < 2 ? ' hero' : ''}">${ing}</span>`
+  ).join('');
+  detailBody.innerHTML = `
+    <div class="detail-swatch" style="background:${p.swatch}">
+      <span class="detail-icon">${iconMarkup(p.icon)}</span>
+    </div>
+    <div class="detail-lot">${p.lot} · ${p.volume} ${trendMarkup(p)}</div>
+    <h2>${p.name}</h2>
+    <div class="rating-line">${ratingMarkup(p)}</div>
+    <div class="detail-price">${priceMarkup(p)}</div>
+    ${isSoldOut ? '<div class="stock-low-text">일시 품절된 상품이에요. 재입고 후 다시 만나요.</div>' : ''}
+    ${isLowStock ? `<div class="stock-low-text">품절 임박 · ${p.stock}개 남음</div>` : ''}
+
+    <div class="purchase-options">
+      <div class="opt-row">
+        <span class="opt-label">수량</span>
+        <div class="qty-stepper">
+          <button class="qty-btn" type="button" data-step="-1"${isSoldOut ? ' disabled' : ''}>−</button>
+          <span class="qty-value" id="opt-qty">1</span>
+          <button class="qty-btn" type="button" data-step="1"${isSoldOut ? ' disabled' : ''}>+</button>
+        </div>
+      </div>
+      <div class="opt-row">
+        <span class="opt-label">배송지</span>
+        <input class="opt-address" id="opt-address" type="text" value="${getAddress()}"${isSoldOut ? ' disabled' : ''}>
+      </div>
+      <div class="opt-row">
+        <span class="opt-label">배송방법</span>
+        <div class="ship-type-group">
+          <label><input type="radio" name="ship-type" value="now" checked${isSoldOut ? ' disabled' : ''}> 즉시배송</label>
+          <label><input type="radio" name="ship-type" value="scheduled"${isSoldOut ? ' disabled' : ''}> 예약배송</label>
+        </div>
+      </div>
+      <div class="opt-row" id="opt-date-row" style="display:none;">
+        <span class="opt-label">희망일</span>
+        <input class="opt-date" id="opt-date" type="date" min="${minDate}">
+      </div>
+      <p class="opt-error" id="opt-error"></p>
+    </div>
+
+    <div class="delivery-info" id="opt-delivery-info">
+      ${TRUCK_SVG}
+      <div><strong>${delivery.shipLabel} 출고</strong> · ${delivery.arriveText}<br>오후 ${CUTOFF_HOUR - 12}시 이전 주문 시 당일 출고돼요.</div>
+    </div>
+
+    <div class="detail-actions">
+      <button class="btn-cart" type="button"${isSoldOut ? ' disabled' : ''}>${isSoldOut ? '품절' : '장바구니 담기'}</button>
+      <button class="btn-buy" type="button"${isSoldOut ? ' disabled' : ''}>${isSoldOut ? '품절' : '바로 구매'}</button>
+    </div>
+    <button class="detail-wish${isWished ? ' active' : ''}" type="button">${HEART_SVG}<span>${isWished ? '위시리스트에 담김' : '위시리스트에 담기'}</span></button>
+    <p class="detail-desc">${p.desc}</p>
+    <dl class="detail-specs">
+      <dt>카테고리</dt><dd>${p.category}</dd>
+      <dt>피부타입</dt><dd>${p.skinType}</dd>
+      <dt>용량</dt><dd>${p.volume}</dd>
+      <dt>로트번호</dt><dd>${p.lot}</dd>
+    </dl>
+    <div class="ingredient-block">
+      <h4>전성분 (INCI)</h4>
+      <div class="ingredient-list">${ingredientChips}</div>
+    </div>
+    <div class="review-section">
+      <h4 id="review-count-label">이용후기</h4>
+      <div class="review-form">
+        <div class="star-picker" id="review-star-picker">
+          ${[1,2,3,4,5].map(n=>`<button type="button" data-star="${n}" aria-label="${n}점">${STAR_SVG}</button>`).join('')}
+        </div>
+        <textarea class="review-textarea" id="review-text" placeholder="사용해보신 느낌을 남겨주세요."></textarea>
+        <div class="photo-upload-row" id="review-photo-row">
+          <label class="photo-add-btn" for="review-photo-input">+</label>
+        </div>
+        <input type="file" id="review-photo-input" accept="image/*" multiple style="display:none;">
+        <button class="review-submit-btn" type="button" id="review-submit-btn">후기 남기기</button>
+        <p class="review-form-error" id="review-form-error"></p>
+      </div>
+      <div class="review-list" id="review-list"></div>
+    </div>
+  `;
+
+  /* 수량 스테퍼 */
+  const qtyEl = detailBody.querySelector('#opt-qty');
+  detailBody.querySelectorAll('.qty-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const step = Number(btn.dataset.step);
+      const next = Math.min(10, Math.max(1, Number(qtyEl.textContent) + step));
+      qtyEl.textContent = next;
+    });
+  });
+
+  /* 배송방법 토글 */
+  const dateRow = detailBody.querySelector('#opt-date-row');
+  const dateInput = detailBody.querySelector('#opt-date');
+  const deliveryInfoBox = detailBody.querySelector('#opt-delivery-info');
+  const errorEl = detailBody.querySelector('#opt-error');
+  function showOptError(msg){ errorEl.textContent = msg; errorEl.classList.add('show'); }
+  function hideOptError(){ errorEl.classList.remove('show'); }
+  detailBody.querySelectorAll('input[name="ship-type"]').forEach(radio=>{
+    radio.addEventListener('change', ()=>{
+      const isScheduled = detailBody.querySelector('input[name="ship-type"]:checked').value === 'scheduled';
+      dateRow.style.display = isScheduled ? 'flex' : 'none';
+      deliveryInfoBox.style.display = isScheduled ? 'none' : 'flex';
+      hideOptError();
+    });
+  });
+
+  function readOptions(){
+    const qty = Number(qtyEl.textContent);
+    const address = detailBody.querySelector('#opt-address').value.trim();
+    const shipType = detailBody.querySelector('input[name="ship-type"]:checked').value;
+    const shipDate = dateInput.value;
+    if(!address){
+      showOptError('배송지를 입력해주세요.');
+      detailBody.querySelector('#opt-address').focus();
+      return null;
+    }
+    if(shipType === 'scheduled' && !shipDate){
+      showOptError('희망 배송일자를 선택해주세요.');
+      dateInput.focus();
+      return null;
+    }
+    hideOptError();
+    saveAddress(address);
+    return { qty, address, shipType, shipDate };
+  }
+
+  const cartBtn = detailBody.querySelector('.btn-cart');
+  cartBtn.addEventListener('click', ()=>{
+    const opts = readOptions();
+    if(!opts) return;
+    addToCart(p.id, opts.qty, opts.shipType, opts.shipDate);
+    const original = cartBtn.textContent;
+    cartBtn.textContent = '담았어요 ✓';
+    setTimeout(()=>{ cartBtn.textContent = original; }, 1200);
+  });
+  const buyBtn = detailBody.querySelector('.btn-buy');
+  buyBtn.addEventListener('click', ()=>{
+    const opts = readOptions();
+    if(!opts) return;
+    addToCart(p.id, opts.qty, opts.shipType, opts.shipDate);
+    modal.close();
+    openCart();
+  });
+  const detailWishBtn = detailBody.querySelector('.detail-wish');
+  detailWishBtn.addEventListener('click', ()=>{
+    const active = toggleWish(p.id);
+    detailWishBtn.classList.toggle('active', active);
+    detailWishBtn.querySelector('span').textContent = active ? '위시리스트에 담김' : '위시리스트에 담기';
+    applyFilters();
+  });
+
+  initReviewSection(p.id);
+  modal.showModal();
+}
+
+/* ---------------- 리뷰 섹션 ---------------- */
+function initReviewSection(productId){
+  let selectedStars = 0;
+  let draftPhotos = []; // base64 dataURL, 최대 3장
+
+  const starButtons = detailBody.querySelectorAll('#review-star-picker button');
+  const textEl = detailBody.querySelector('#review-text');
+  const photoRow = detailBody.querySelector('#review-photo-row');
+  const photoInput = detailBody.querySelector('#review-photo-input');
+  const submitBtn = detailBody.querySelector('#review-submit-btn');
+  const errorEl = detailBody.querySelector('#review-form-error');
+  const listEl = detailBody.querySelector('#review-list');
+  const countLabel = detailBody.querySelector('#review-count-label');
+
+  function renderStars(){
+    starButtons.forEach(btn=>{
+      btn.classList.toggle('filled', Number(btn.dataset.star) <= selectedStars);
+    });
+  }
+  starButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectedStars = Number(btn.dataset.star);
+      renderStars();
+    });
+  });
+
+  function renderPhotoRow(){
+    photoRow.querySelectorAll('.photo-thumb').forEach(el=>el.remove());
+    draftPhotos.forEach((src, idx)=>{
+      const thumb = document.createElement('div');
+      thumb.className = 'photo-thumb';
+      thumb.innerHTML = `<img src="${src}" alt=""><button type="button" class="photo-remove" data-idx="${idx}">×</button>`;
+      photoRow.insertBefore(thumb, photoRow.firstChild);
+    });
+    const addBtn = photoRow.querySelector('.photo-add-btn');
+    addBtn.style.display = draftPhotos.length >= 3 ? 'none' : 'flex';
+    photoRow.querySelectorAll('.photo-remove').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        draftPhotos.splice(Number(btn.dataset.idx), 1);
+        renderPhotoRow();
+      });
+    });
+  }
+
+  photoInput.addEventListener('change', async ()=>{
+    const files = [...photoInput.files].slice(0, 3 - draftPhotos.length);
+    for(const file of files){
+      try{
+        const dataUrl = await resizeImageFile(file);
+        draftPhotos.push(dataUrl);
+      }catch(e){ /* 이미지 로드 실패 시 무시 */ }
+    }
+    photoInput.value = '';
+    renderPhotoRow();
+  });
+
+  function showReviewError(msg){ errorEl.textContent = msg; errorEl.classList.add('show'); }
+  function hideReviewError(){ errorEl.classList.remove('show'); }
+
+  submitBtn.addEventListener('click', ()=>{
+    const text = textEl.value.trim();
+    if(selectedStars === 0){ showReviewError('별점을 선택해주세요.'); return; }
+    if(!text){ showReviewError('후기 내용을 입력해주세요.'); textEl.focus(); return; }
+    hideReviewError();
+    addReview(productId, {
+      rating: selectedStars,
+      text,
+      photos: draftPhotos,
+      date: new Date().toISOString(),
+    });
+    selectedStars = 0;
+    draftPhotos = [];
+    textEl.value = '';
+    renderStars();
+    renderPhotoRow();
+    renderReviewList();
+  });
+
+  function renderReviewList(){
+    const reviews = getReviews(productId);
+    countLabel.textContent = `이용후기 (${reviews.length})`;
+    if(reviews.length === 0){
+      listEl.innerHTML = `<div class="review-empty">— 아직 남겨진 후기가 없어요. 첫 후기를 남겨주세요 —</div>`;
+      return;
+    }
+    listEl.innerHTML = reviews.map(r=>`
+      <div class="review-item">
+        <span class="review-stars">${starsMarkup(r.rating)}</span><span class="review-date">${fmtReviewDate(r.date)}</span>
+        <p>${r.text.replace(/</g,'&lt;')}</p>
+        ${r.photos && r.photos.length ? `<div class="review-photos">${r.photos.map(src=>`<img src="${src}" alt="">`).join('')}</div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  renderStars();
+  renderPhotoRow();
+  renderReviewList();
+}
+
+/* ---------------- 카트 모달 ---------------- */
+const cartModal = document.getElementById('cart-modal');
+const cartBody = document.getElementById('cart-body');
+document.getElementById('cart-close').addEventListener('click', ()=>cartModal.close());
+document.getElementById('cart-fab').addEventListener('click', openCart);
+
+function openCart(){
+  renderCartBody();
+  cartModal.showModal();
+}
+
+function renderCartBody(){
+  const cart = getCart();
+  const ids = Object.keys(cart).map(Number);
+  if(ids.length === 0){
+    cartBody.innerHTML = `<div class="cart-empty">— 장바구니가 비어있어요 —</div>`;
+    return;
+  }
+  let total = 0;
+  const delivery = deliveryEstimate();
+  const itemsHtml = ids.map(id=>{
+    const p = PRODUCTS.find(x=>x.id===id);
+    if(!p) return '';
+    const item = cart[id];
+    total += p.price * item.qty;
+    const shipLabel = item.shipType === 'scheduled'
+      ? `예약배송 · ${scheduledLabel(item.shipDate)}`
+      : `즉시배송 · ${delivery.arriveShort}`;
+    return `
+      <div class="cart-item" data-id="${id}">
+        <span class="ci-icon">${iconMarkup(p.icon)}</span>
+        <div class="ci-info">
+          <div class="ci-name">${p.name}</div>
+          <div class="ci-meta">${formatPrice(p.price)} · 수량 ${item.qty}개</div>
+          <div class="ci-meta">${shipLabel}</div>
+        </div>
+        <button class="ci-remove" type="button" data-id="${id}">삭제</button>
+      </div>
+    `;
+  }).join('');
+
+  cartBody.innerHTML = `
+    <div class="opt-row" style="padding-top:0;">
+      <span class="opt-label">배송지</span>
+      <input class="opt-address" id="cart-address" type="text" value="${getAddress()}">
+    </div>
+    ${itemsHtml}
+    <div class="cart-total">배송비 무료 · <span>합계</span> <strong>${formatPrice(total)}</strong></div>
+    <button class="cart-checkout-btn" type="button">전체 주문하기</button>
+  `;
+
+  cartBody.querySelectorAll('.ci-remove').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      removeFromCart(Number(btn.dataset.id));
+      renderCartBody();
+    });
+  });
+  cartBody.querySelector('#cart-address').addEventListener('change', (e)=>{
+    saveAddress(e.target.value.trim() || DEFAULT_ADDRESS);
+  });
+  cartBody.querySelector('.cart-checkout-btn').addEventListener('click', ()=>{
+    const address = cartBody.querySelector('#cart-address').value.trim() || DEFAULT_ADDRESS;
+    saveAddress(address);
+    const hasScheduled = ids.some(id => cart[id].shipType === 'scheduled');
+    const hasNow = ids.some(id => cart[id].shipType === 'now');
+    const lines = [];
+    if(hasNow) lines.push(`즉시배송 · ${delivery.arriveShort}`);
+    if(hasScheduled) lines.push('예약배송 상품은 희망일에 맞춰 도착해요');
+    cartBody.innerHTML = `
+      <div class="order-success">
+        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        <h3>주문이 접수되었어요</h3>
+        <p>${address}<br>${lines.join(' · ')}</p>
+      </div>
+    `;
+    saveCart({});
+  });
+}
+
+/* ---------------- 위시리스트 모달 ---------------- */
+const wishlistModal = document.getElementById('wishlist-modal');
+const wishlistBody = document.getElementById('wishlist-body');
+document.getElementById('wishlist-close').addEventListener('click', ()=>wishlistModal.close());
+document.getElementById('wish-fab').addEventListener('click', openWishlist);
+
+function openWishlist(){
+  renderWishlistBody();
+  wishlistModal.showModal();
+}
+
+function renderWishlistBody(){
+  const ids = [...getWishSet()];
+  if(ids.length === 0){
+    wishlistBody.innerHTML = `<div class="cart-empty">— 찜한 제품이 없어요 —</div>`;
+    return;
+  }
+  wishlistBody.innerHTML = ids.map(id=>{
+    const p = PRODUCTS.find(x=>x.id===id);
+    if(!p) return '';
+    const isSoldOut = p.stock === 0;
+    return `
+      <div class="cart-item" data-id="${id}">
+        <span class="ci-icon">${iconMarkup(p.icon)}</span>
+        <div class="ci-info">
+          <div class="ci-name">${p.name}</div>
+          <div class="ci-meta">${priceMarkup(p)}${isSoldOut ? ' · <span style="color:var(--rose)">품절</span>' : ''}</div>
+        </div>
+        ${isSoldOut ? '' : `<button class="ci-mini-buy" type="button" data-id="${id}">담기</button>`}
+        <button class="ci-remove" type="button" data-id="${id}">삭제</button>
+      </div>
+    `;
+  }).join('');
+
+  wishlistBody.querySelectorAll('.ci-remove').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      toggleWish(Number(btn.dataset.id));
+      renderWishlistBody();
+      applyFilters();
+    });
+  });
+  wishlistBody.querySelectorAll('.ci-mini-buy').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      addToCart(Number(btn.dataset.id), 1, 'now', null);
+      const original = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(()=>{ btn.textContent = original; }, 1000);
+    });
+  });
+}
+
+/* ---------------- 로그인 / 회원가입 (프로토타입 · localStorage) ---------------- */
+/* 실제 서비스에서는 서버 인증으로 교체해야 합니다. 비밀번호를 평문 저장하므로 데모 용도로만 사용하세요. */
+const USERS_KEY = 'ysw-users';
+const SESSION_KEY = 'ysw-session';
+function getUsers(){
+  try{ return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveUsers(u){ localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+function getSession(){ return localStorage.getItem(SESSION_KEY); }
+function setSession(email){ localStorage.setItem(SESSION_KEY, email); updateAuthUI(); }
+function clearSession(){ localStorage.removeItem(SESSION_KEY); updateAuthUI(); }
+function currentUser(){
+  const email = getSession();
+  if(!email) return null;
+  const u = getUsers()[email];
+  return u ? { email, ...u } : null;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const authModal = document.getElementById('auth-modal');
+const authBody = document.getElementById('auth-body');
+const authModalTitle = document.getElementById('auth-modal-title');
+document.getElementById('auth-close').addEventListener('click', ()=>authModal.close());
+document.getElementById('auth-fab').addEventListener('click', ()=>{ renderAuthBody(); authModal.showModal(); });
+
+let authTab = 'login';
+
+function updateAuthUI(){
+  const user = currentUser();
+  document.getElementById('auth-fab-label').textContent = user ? `${user.name}님` : '로그인';
+}
+
+function renderAuthBody(){
+  const user = currentUser();
+  if(user){
+    authModalTitle.textContent = '내 계정';
+    authBody.innerHTML = `
+      <div class="auth-greeting">
+        <strong>${escapeHtml(user.name)}</strong>님, 반가워요.
+        <div class="auth-email">${escapeHtml(user.email)}</div>
+      </div>
+      <button class="auth-submit-btn" type="button" id="auth-logout">로그아웃</button>
+    `;
+    authBody.querySelector('#auth-logout').addEventListener('click', ()=>{
+      clearSession();
+      renderAuthBody();
+    });
+    return;
+  }
+
+  authModalTitle.textContent = authTab === 'login' ? '로그인' : '회원가입';
+  authBody.innerHTML = `
+    <div class="auth-tabs">
+      <button type="button" data-tab="login"${authTab==='login' ? ' class="active"' : ''}>로그인</button>
+      <button type="button" data-tab="signup"${authTab==='signup' ? ' class="active"' : ''}>회원가입</button>
+    </div>
+    <form id="auth-form">
+      ${authTab === 'signup' ? `<label>이름<input type="text" id="auth-name" autocomplete="name" required></label>` : ''}
+      <label>이메일<input type="email" id="auth-email" autocomplete="email" required></label>
+      <label>비밀번호<input type="password" id="auth-pw" autocomplete="${authTab==='login' ? 'current-password' : 'new-password'}" required minlength="4"></label>
+      <p class="auth-error" id="auth-error"></p>
+      <button class="auth-submit-btn" type="submit">${authTab==='login' ? '로그인' : '가입하고 시작하기'}</button>
+    </form>
+  `;
+  authBody.querySelectorAll('.auth-tabs button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ authTab = btn.dataset.tab; renderAuthBody(); });
+  });
+  authBody.querySelector('#auth-form').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = authBody.querySelector('#auth-email').value.trim().toLowerCase();
+    const pw = authBody.querySelector('#auth-pw').value;
+    const errEl = authBody.querySelector('#auth-error');
+    const show = (msg)=>{ errEl.textContent = msg; errEl.classList.add('show'); };
+    const users = getUsers();
+
+    if(authTab === 'signup'){
+      const name = authBody.querySelector('#auth-name').value.trim();
+      if(!name) return show('이름을 입력해주세요.');
+      if(users[email]) return show('이미 가입된 이메일이에요. 로그인해 주세요.');
+      users[email] = { name, password: pw };
+      saveUsers(users);
+      setSession(email);
+    } else {
+      if(!users[email] || users[email].password !== pw) return show('이메일 또는 비밀번호가 올바르지 않아요.');
+      setSession(email);
+    }
+    renderAuthBody();
+  });
+}
+
+updateAuthUI();
+updateCartBadge();
+updateWishBadge();
+
+[fSearch, fCategory, fSkin, fPrice, fSort].forEach(el=>{
+  el.addEventListener('input', applyFilters);
+  el.addEventListener('change', applyFilters);
+});
+
+renderGrid(PRODUCTS, false);
+fCount.textContent = `${PRODUCTS.length} / ${PRODUCTS.length}`;
+</script>
+</body>
+</html>
