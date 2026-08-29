@@ -770,7 +770,7 @@ function fillOptions(selectEl, values){
   });
 }
 fillOptions(fCategory, PRODUCTS.map(p=>p.category));
-fillOptions(fSkin, PRODUCTS.map(p=>p.skinType));
+fillOptions(fSkin, PRODUCTS.map(p=>p.skinType).filter(v=>v!=='전체'));
 document.getElementById('stat-count').textContent = PRODUCTS.length;
 
 function formatPrice(n){ return n.toLocaleString('ko-KR') + '원'; }
