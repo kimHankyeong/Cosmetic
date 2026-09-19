@@ -65,7 +65,15 @@
   }
 
   /* ---------- Hero ---------- */
-  .hero{ padding: 3.2rem 0 2.4rem; text-align: center; }
+  .hero{
+    min-height: 100svh;
+    padding: clamp(6rem, 13vh, 9rem) 0 clamp(5rem, 11vh, 8rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
   .hero::after{
     content: '';
     display: block;
@@ -96,7 +104,7 @@
   }
   .hero .brand-desc{
     max-width: 44ch;
-    margin: 1.6rem auto 0;
+    margin: 2.4rem auto 0;
     color: var(--ink-soft);
     font-size: 1.02rem;
     line-height: 1.7;
@@ -104,7 +112,7 @@
   .brand-film{
     width: 100%;
     display: block;
-    margin: 2rem auto 0;
+    margin: 0 auto;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     border: 1px solid var(--line);
@@ -112,11 +120,12 @@
     background: var(--ink);
     box-shadow: 0 14px 30px rgba(46,95,90,0.14);
   }
+  .brand-film-section{ padding: 1.5rem 0 3.5rem; }
   .hero-meta{
     display: flex;
     justify-content: center;
     gap: 2.2rem;
-    margin-top: 2.2rem;
+    margin-top: 3.4rem;
     font-family: var(--font-mono);
     font-size: 0.78rem;
     color: var(--ink-soft);
@@ -865,15 +874,18 @@
     <h1 class="brand-wordmark">젊음의 샘물</h1>
     <span class="brand-en">Spring Water of Youth</span>
     <p class="brand-desc">피부 컨디션에 가장 좋은 상태로. 자극은 줄이고 근거는 뚜렷한 성분으로, 매일의 피부에 잔잔한 물기를 더합니다.</p>
-    <video class="brand-film" id="brand-film" controls loop playsinline preload="metadata" aria-label="브랜드 소개 영상">
-      <source src="Video%20Project.mp4" type="video/mp4">
-      Your browser does not support video playback.
-    </video>
     <div class="hero-meta">
       <button class="hero-stat" id="stat-products" type="button"><strong id="stat-count">64</strong>개 제품</button>
       <button class="hero-stat" id="stat-categories" type="button"><strong>5</strong>개 카테고리</button>
       <button class="hero-stat" id="stat-skintypes" type="button"><strong>5</strong>개 피부타입 대응</button>
     </div>
+  </section>
+
+  <section class="brand-film-section" aria-label="브랜드 소개 영상">
+    <video class="brand-film" id="brand-film" loop playsinline preload="metadata" controlslist="nodownload nofullscreen noremoteplayback" disablepictureinpicture aria-label="브랜드 소개 영상">
+      <source src="Video%20Project.mp4" type="video/mp4">
+      Your browser does not support video playback.
+    </video>
   </section>
 
   <div class="filter-bar">
@@ -1078,17 +1090,24 @@ function iconMarkup(type){ return ICONS[type] || ICONS.jar; }
 
 /* ---------------- 제품 사진 (로컬 파일, patch/box는 사진 없이 아이콘 유지) ---------------- */
 const PHOTO_URLS = {
-  jar: 'images/products/jar.jpg',
-  dropper: 'images/products/dropper.jpg',
-  tube: 'images/products/tube.jpg',
-  pump: 'images/products/pump.jpg',
-  compact: 'images/products/compact.jpg',
-  stick: 'images/products/stick.jpg',
-  spray: 'images/products/spray.jpg',
+  jar: [
+    'images/products/jar.jpg',
+    'images/products/pexels-cream-leaves.jpg',
+    'images/products/pexels-cream-marble.jpg',
+  ],
+  dropper: ['images/products/dropper.jpg'],
+  tube: ['images/products/tube.jpg'],
+  pump: ['images/products/pump.jpg'],
+  compact: ['images/products/compact.jpg'],
+  stick: ['images/products/stick.jpg'],
+  spray: ['images/products/spray.jpg'],
 };
-function photoUrl(type){ return PHOTO_URLS[type]; }
+function photoUrl(product){
+  const photos = PHOTO_URLS[product.icon];
+  return photos ? photos[(product.id - 1) % photos.length] : '';
+}
 function mediaMarkup(p, iconClass, photoClass){
-  const photo = photoUrl(p.icon);
+  const photo = photoUrl(p);
   return photo
     ? `<img class="${photoClass}" src="${photo}" alt="${p.name}">`
     : `<span class="${iconClass}">${iconMarkup(p.icon)}</span>`;
@@ -1319,7 +1338,7 @@ function renderGrid(list, isRanked){
     const isSoldOut = p.stock === 0;
     const isLowStock = !isSoldOut && p.stock < 10;
     const rank = idx + 1;
-    const cardPhoto = photoUrl(p.icon);
+    const cardPhoto = photoUrl(p);
     const card = document.createElement('div');
     card.className = `card${isSoldOut ? ' sold-out' : ''}`;
     card.innerHTML = `
@@ -1369,7 +1388,7 @@ function openDetail(id){
   const ingredientChips = p.ingredients.map((ing, i)=>
     `<span class="ingredient-chip${i < 2 ? ' hero' : ''}">${ing}</span>`
   ).join('');
-  const detailPhoto = photoUrl(p.icon);
+  const detailPhoto = photoUrl(p);
   detailBody.innerHTML = `
     <div class="detail-swatch${detailPhoto ? ' has-photo' : ''}" style="background:${p.swatch}">
       ${mediaMarkup(p, 'detail-icon', 'detail-photo')}
