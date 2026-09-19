@@ -65,7 +65,7 @@
   }
 
   /* ---------- Hero ---------- */
-  .hero{
+  section.hero{
     min-height: 100svh;
     padding: clamp(6rem, 13vh, 9rem) 0 clamp(5rem, 11vh, 8rem);
     display: flex;
@@ -74,7 +74,7 @@
     justify-content: center;
     text-align: center;
   }
-  .hero::after{
+  section.hero::after{
     content: '';
     display: block;
     width: 100%;
@@ -360,6 +360,18 @@
 
   /* ---------- Detail modal ---------- */
   dialog article{ max-width: 640px; background: var(--surface); }
+  #detail-modal article > header{
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 1rem;
+    padding: 0.45rem 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  #detail-close{ margin-left: auto; }
   .detail-swatch{ position: relative; aspect-ratio: 16/8; border-radius: 2px; margin-bottom: 1.2rem; overflow: hidden; }
   .detail-swatch:not(.has-photo){
     background-image:
@@ -969,11 +981,6 @@
   </article>
 </dialog>
 
-<footer class="site-footer container">
-  <span>젊음의 샘물 · PROTOTYPE STAGE 1</span>
-  <span>DATA: MOCK · 64 SKUs</span>
-</footer>
-
 <script>
 /* =========================================================
    가짜 제품 데이터 32개.
@@ -1095,9 +1102,17 @@ const PHOTO_URLS = {
     'images/products/pexels-cream-leaves.jpg',
     'images/products/pexels-cream-marble.jpg',
   ],
-  dropper: ['images/products/dropper.jpg'],
-  tube: ['images/products/tube.jpg'],
-  pump: ['images/products/pump.jpg'],
+  dropper: [
+    'images/products/dropper.jpg',
+    'images/products/pexels-serum-linen.jpg',
+    'images/products/pexels-serum-dark.jpg',
+  ],
+  tube: ['images/products/tube.jpg', 'images/products/pexels-tube-white.jpg'],
+  pump: [
+    'images/products/pump.jpg',
+    'images/products/pexels-pump-white.jpg',
+    'images/products/pexels-pump-mockup.jpg',
+  ],
   compact: ['images/products/compact.jpg'],
   stick: ['images/products/stick.jpg'],
   spray: ['images/products/spray.jpg'],
