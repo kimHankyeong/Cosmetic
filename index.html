@@ -109,6 +109,18 @@
     color: var(--ink-soft);
   }
   .hero-meta strong{ display: block; color: var(--ink); font-size: 1.05rem; font-family: var(--font-body); }
+  .hero-stat{
+    background: none;
+    border: none;
+    padding: 0.3rem 0.4rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    border-radius: 2px;
+    transition: background 0.15s ease;
+  }
+  .hero-stat:hover{ background: rgba(46,95,90,0.08); color: var(--sage-deep); }
 
   /* ---------- Filter bar ---------- */
   .filter-bar{
@@ -743,6 +755,49 @@
     cursor: pointer;
   }
 
+  /* ---------- 카테고리/피부타입 정보 모달 ---------- */
+  #info-modal article{ max-width: 480px; background: var(--surface); }
+  #info-modal header{ display: flex; align-items: center; justify-content: space-between; }
+  #info-modal header strong{ font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .info-tabs{
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .info-tab-btn{
+    flex: 1;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .info-tab-btn.active{ background: var(--sage-deep); border-color: var(--sage-deep); color: var(--surface); }
+  .info-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    text-align: left;
+    background: var(--surface);
+    width: 100%;
+    font-family: var(--font-body);
+  }
+  .info-item:hover{ border-color: var(--sage); background: var(--bg); }
+  .info-item-name{ font-size: 0.92rem; color: var(--ink); margin-bottom: 0.25rem; font-weight: 500; }
+  .info-item-desc{ font-size: 0.8rem; color: var(--ink-soft); line-height: 1.5; }
+  .info-item-count{ font-family: var(--font-mono); font-size: 0.74rem; color: var(--mono-accent); white-space: nowrap; flex-shrink: 0; }
+
   /* ---------- 검색 모달 ---------- */
   #search-modal article{ max-width: 400px; background: var(--surface); }
   #search-modal header{ display: flex; align-items: center; justify-content: space-between; }
@@ -798,9 +853,9 @@
     <span class="brand-en">Spring Water of Youth</span>
     <p class="brand-desc">피부 컨디션에 가장 좋은 상태로. 자극은 줄이고 근거는 뚜렷한 성분으로, 매일의 피부에 잔잔한 물기를 더합니다.</p>
     <div class="hero-meta">
-      <div><strong id="stat-count">32</strong>개 제품</div>
-      <div><strong>5</strong>개 카테고리</div>
-      <div><strong>5</strong>개 피부타입 대응</div>
+      <button class="hero-stat" id="stat-products" type="button"><strong id="stat-count">64</strong>개 제품</button>
+      <button class="hero-stat" id="stat-categories" type="button"><strong>5</strong>개 카테고리</button>
+      <button class="hero-stat" id="stat-skintypes" type="button"><strong>5</strong>개 피부타입 대응</button>
     </div>
   </section>
 
@@ -864,6 +919,17 @@
   </article>
 </dialog>
 
+<dialog id="info-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="info-close"></button><strong id="info-modal-title">카테고리</strong></header>
+    <div class="info-tabs">
+      <button class="info-tab-btn" data-tab="category" type="button">카테고리</button>
+      <button class="info-tab-btn" data-tab="skinType" type="button">피부타입</button>
+    </div>
+    <div class="info-tab-body" id="info-tab-body"></div>
+  </article>
+</dialog>
+
 <dialog id="search-modal">
   <article>
     <header><button aria-label="Close" rel="prev" id="search-modal-close"></button><strong>검색</strong></header>
@@ -876,7 +942,7 @@
 
 <footer class="site-footer container">
   <span>젊음의 샘물 · PROTOTYPE STAGE 1</span>
-  <span>DATA: MOCK · 32 SKUs</span>
+  <span>DATA: MOCK · 64 SKUs</span>
 </footer>
 
 <script>
@@ -921,6 +987,39 @@ const PRODUCTS = [
   { id:30, name:"롤온 데오도런트", category:"바디케어", skinType:"전체", price:11000, icon:'stick', volume:"50ml", lot:"LOT 24H-017", rating:4.52, reviewCount:3886, trend:0, swatch:"#DCE0D6", ingredients:["베이킹소다","포타슘알럼","글리세린","알란토인","향료","1,2-헥산다이올"], stock:0, desc:"자극이 적은 성분으로 땀과 냄새를 케어하는 롤온 데오도런트." },
   { id:31, name:"바디 미스트", category:"바디케어", skinType:"전체", price:18000, originalPrice:22000, icon:'spray', volume:"150ml", lot:"LOT 24H-021", rating:4.82, reviewCount:1369, trend:'NEW', swatch:"#DFD2DE", ingredients:["우드앰버향료","알로에베라추출물","판테놀","토코페롤","글리세린","1,2-헥산다이올"], stock:201, desc:"은은하게 퍼지는 우디 플로럴 향으로 산뜻하게 마무리하는 바디 미스트." },
   { id:32, name:"헤어 스칼프 스케일러", category:"헤어케어", skinType:"지성", price:21000, icon:'pump', volume:"150ml", lot:"LOT 24H-024", rating:4.43, reviewCount:63209, trend:2, swatch:"#C9C0A9", ingredients:["이눌린","멘톨","살리실릭애씨드","글리세린","판테놀","1,2-헥산다이올"], stock:249, desc:"두피의 묵은 각질과 잔여물을 씻어내는 주 1~2회 스케일링 케어." },
+
+  { id:33, name:"콜라겐 부스팅 세럼", category:"스킨케어", skinType:"복합성", price:39000, originalPrice:49000, icon:'dropper', volume:"30ml", lot:"LOT 24I-002", rating:4.51, reviewCount:2140, trend:'NEW', swatch:"#DCE3D2", ingredients:["가수분해콜라겐","펩타이드","글리세린","판테놀","1,2-헥산다이올","다이메티콘"], stock:214, desc:"저분자 콜라겐과 펩타이드가 탄력을 채워주는 부스팅 세럼." },
+  { id:34, name:"판테놀 진정 젤", category:"스킨케어", skinType:"민감성", price:22000, icon:'tube', volume:"100ml", lot:"LOT 24I-006", rating:4.68, reviewCount:9873, trend:0, swatch:"#CBD8CE", ingredients:["판테놀","알란토인","글리세린","카보머","1,2-헥산다이올","다이메티콘"], stock:305, desc:"판테놀 고농축 포뮬러로 예민해진 피부를 빠르게 진정시키는 젤." },
+  { id:35, name:"병풀 리페어 앰플", category:"스킨케어", skinType:"지성", price:28000, icon:'dropper', volume:"30ml", lot:"LOT 24I-011", rating:4.44, reviewCount:1520, trend:4, swatch:"#B9C7A9", ingredients:["병풀추출물","마데카소사이드","나이아신아마이드","글리세린","판테놀","카보머"], stock:198, desc:"병풀 추출물이 트러블 흔적을 케어해주는 리페어 앰플." },
+  { id:36, name:"히알루론산 광채 크림", category:"스킨케어", skinType:"건성", price:34000, originalPrice:41000, icon:'jar', volume:"50ml", lot:"LOT 24I-014", rating:4.59, reviewCount:7431, trend:0, swatch:"#EADFCB", ingredients:["히알루론산","세라마이드엔피","글리세린","판테놀","다이메티콘","토코페롤"], stock:227, desc:"다섯 가지 히알루론산이 속건조를 채워 광채를 더하는 크림." },
+  { id:37, name:"세라마이드 리페어 오일", category:"스킨케어", skinType:"건성", price:26000, icon:'dropper', volume:"30ml", lot:"LOT 24I-019", rating:4.63, reviewCount:634, trend:'NEW', swatch:"#C9948A", ingredients:["세라마이드엔피","스쿠알란","호호바오일","토코페롤","다이메티콘"], stock:96, desc:"세라마이드와 스쿠알란이 손상된 피부 장벽을 채워주는 오일." },
+  { id:38, name:"나이아신아마이드 토닝 패드", category:"스킨케어", skinType:"복합성", price:21000, icon:'jar', volume:"70매", lot:"LOT 24I-023", rating:4.4, reviewCount:11207, trend:-2, swatch:"#E4D9C6", ingredients:["나이아신아마이드","베타인","글리세린","판테놀","알란토인"], stock:341, desc:"산뜻하게 닦아내며 톤을 정돈해주는 나이아신아마이드 토닝 패드." },
+  { id:39, name:"무기자차 선에센스", category:"스킨케어", skinType:"전체", price:27000, originalPrice:32000, icon:'tube', volume:"50ml", lot:"LOT 24J-002", rating:4.55, reviewCount:5289, trend:0, swatch:"#B0A79A", ingredients:["티타늄디옥사이드","징크옥사이드","글리세린","판테놀","다이메티콘"], stock:283, desc:"무기자차 성분의 순한 선에센스, 백탁 없이 산뜻하게." },
+  { id:40, name:"티트리 스팟 세럼", category:"스킨케어", skinType:"지성", price:24000, originalPrice:30000, icon:'dropper', volume:"20ml", lot:"LOT 24J-006", rating:4.47, reviewCount:8802, trend:-3, swatch:"#EFE8D6", ingredients:["티트리잎오일","살리실릭애씨드","나이아신아마이드","글리세린","판테놀"], stock:0, desc:"트러블 부위에 집중 사용하는 티트리 스팟 세럼." },
+  { id:41, name:"콜라겐 립세럼", category:"스킨케어", skinType:"전체", price:13000, icon:'dropper', volume:"15ml", lot:"LOT 24J-012", rating:4.36, reviewCount:1466, trend:0, swatch:"#C4D0BC", ingredients:["가수분해콜라겐","시어버터","글리세린","판테놀"], stock:167, desc:"입술 결을 채워주는 콜라겐 립 전용 세럼." },
+  { id:42, name:"동백오일 슬리핑팩", category:"스킨케어", skinType:"건성", price:30000, originalPrice:37000, icon:'jar', volume:"100ml", lot:"LOT 24J-014", rating:4.7, reviewCount:3355, trend:5, swatch:"#E8D4BC", ingredients:["동백오일","세라마이드엔피","스쿠알란","글리세린","판테놀"], stock:172, desc:"자는 동안 유분막을 채워 촉촉함을 유지해주는 슬리핑팩." },
+  { id:43, name:"저자극 약산성 폼", category:"클렌징", skinType:"민감성", price:21000, icon:'pump', volume:"150ml", lot:"LOT 24J-020", rating:4.42, reviewCount:6047, trend:0, swatch:"#D9DED0", ingredients:["코카미도프로필베타인","판테놀","알란토인","글리세린"], stock:311, desc:"약산성 pH로 저자극 세안이 가능한 폼 클렌저." },
+  { id:44, name:"카올린 클레이 클렌저", category:"클렌징", skinType:"지성", price:19000, icon:'tube', volume:"120ml", lot:"LOT 24J-024", rating:4.38, reviewCount:2984, trend:'NEW', swatch:"#D8C8A8", ingredients:["카올린","벤토나이트","코카미도프로필베타인","글리세린"], stock:8, desc:"카올린이 모공 속 피지까지 개운하게 씻어내는 클렌저." },
+  { id:45, name:"오일투폼 더블클렌저", category:"클렌징", skinType:"복합성", price:25000, icon:'pump', volume:"200ml", lot:"LOT 24K-004", rating:4.61, reviewCount:1078, trend:0, swatch:"#CFC2B6", ingredients:["호호바오일","코카미도프로필베타인","글리세린","판테놀"], stock:238, desc:"오일로 녹이고 폼으로 마무리하는 더블 클렌저." },
+  { id:46, name:"판테놀 리무버", category:"클렌징", skinType:"민감성", price:17000, originalPrice:21000, icon:'dropper', volume:"150ml", lot:"LOT 24K-008", rating:4.49, reviewCount:12490, trend:1, swatch:"#DCC6AC", ingredients:["판테놀","글리세린","비타민E","1,2-헥산다이올"], stock:294, desc:"포인트 메이크업까지 자극 없이 지워주는 리무버." },
+  { id:47, name:"효소 파우더 워시", category:"클렌징", skinType:"전체", price:18000, originalPrice:22000, icon:'jar', volume:"60g", lot:"LOT 24K-010", rating:4.33, reviewCount:762, trend:-4, swatch:"#E1E7DC", ingredients:["파파인효소","카올린","토코페롤","글리세린"], stock:63, desc:"묵은 각질을 부드럽게 정리해주는 파우더 워시." },
+  { id:48, name:"클렌징 밤 스틱", category:"클렌징", skinType:"건성", price:20000, icon:'stick', volume:"20g", lot:"LOT 24K-014", rating:4.66, reviewCount:4519, trend:0, swatch:"#EDE3CE", ingredients:["시어버터","호호바에스터","판테놀","글리세린"], stock:207, desc:"휴대하기 좋은 스틱형 클렌징 밤, 메이크업까지 싹 지워요." },
+  { id:49, name:"매트 립스틱", category:"메이크업", skinType:"전체", price:18000, icon:'stick', volume:"3.5g", lot:"LOT 24K-018", rating:4.55, reviewCount:22318, trend:2, swatch:"#C9CFC1", ingredients:["칸데릴라왁스","마이카","1,2-헥산다이올","시어버터"], stock:356, desc:"발색력 좋은 매트 피니시 립스틱." },
+  { id:50, name:"글로우 쿠션 파운데이션", category:"메이크업", skinType:"건성", price:35000, originalPrice:43000, icon:'compact', volume:"15g", lot:"LOT 24K-024", rating:4.6, reviewCount:16204, trend:'NEW', swatch:"#A99C8D", ingredients:["히알루론산","티타늄디옥사이드","카보머","글리세린"], stock:129, desc:"촉촉한 광채 피니시를 만들어주는 쿠션." },
+  { id:51, name:"브로우 펜슬", category:"메이크업", skinType:"전체", price:15000, icon:'stick', volume:"0.3g", lot:"LOT 24L-004", rating:4.71, reviewCount:9027, trend:0, swatch:"#DCD3E0", ingredients:["칸데릴라왁스","마이카","1,2-헥산다이올"], stock:281, desc:"가늘고 자연스러운 눈썹 라인을 그려주는 펜슬." },
+  { id:52, name:"립틴트 오일", category:"메이크업", skinType:"전체", price:16000, icon:'dropper', volume:"5g", lot:"LOT 24L-007", rating:4.41, reviewCount:3661, trend:5, swatch:"#D6DED2", ingredients:["호호바오일","마이카","토코페롤"], stock:190, desc:"입술에 자연스러운 윤기와 색을 더하는 틴트 오일." },
+  { id:53, name:"피지컨트롤 파우더", category:"메이크업", skinType:"지성", price:16000, icon:'compact', volume:"9g", lot:"LOT 24L-011", rating:4.37, reviewCount:5975, trend:0, swatch:"#C7D3CE", ingredients:["실리카","티타늄디옥사이드","카보머"], stock:266, desc:"과도한 유분을 잡아주는 투명 픽싱 파우더." },
+  { id:54, name:"컨실러 스틱", category:"메이크업", skinType:"전체", price:17000, originalPrice:22000, icon:'stick', volume:"3g", lot:"LOT 24L-015", rating:4.29, reviewCount:1843, trend:-3, swatch:"#DAD0BC", ingredients:["티타늄디옥사이드","시어버터","글리세린"], stock:0, desc:"다크서클과 잡티를 자연스럽게 가려주는 컨실러." },
+  { id:55, name:"두피 진정 토너", category:"헤어케어", skinType:"민감성", price:23000, icon:'dropper', volume:"100ml", lot:"LOT 24L-019", rating:4.58, reviewCount:2213, trend:0, swatch:"#CBD6C1", ingredients:["판테놀","병풀추출물","글리세린","1,2-헥산다이올"], stock:224, desc:"예민한 두피를 진정시켜주는 스킨케어 토너." },
+  { id:56, name:"헤어 오일 세럼", category:"헤어케어", skinType:"건성", price:27000, originalPrice:34000, icon:'dropper', volume:"80ml", lot:"LOT 24L-024", rating:4.66, reviewCount:6784, trend:4, swatch:"#E6DCC8", ingredients:["아르간오일","동백오일","토코페롤","다이메티콘"], stock:151, desc:"푸석한 모발에 윤기를 더하는 헤어 오일 세럼." },
+  { id:57, name:"볼륨 샴푸", category:"헤어케어", skinType:"지성", price:22000, icon:'pump', volume:"400ml", lot:"LOT 24M-002", rating:4.34, reviewCount:37902, trend:0, swatch:"#E9D9B8", ingredients:["멘톨","코카미도프로필베타인","글리세린","판테놀"], stock:317, desc:"뿌리부터 세워주는 볼륨 전용 샴푸." },
+  { id:58, name:"컬러프로텍트 컨디셔너", category:"헤어케어", skinType:"복합성", price:26000, originalPrice:32000, icon:'pump', volume:"300ml", lot:"LOT 24M-006", rating:4.47, reviewCount:4088, trend:'NEW', swatch:"#EAE1CE", ingredients:["세틸알코올","호호바오일","판테놀","글리세린"], stock:9, desc:"염색 모발의 색상 유지를 도와주는 컨디셔너." },
+  { id:59, name:"헤어 미스트", category:"헤어케어", skinType:"전체", price:19000, icon:'spray', volume:"100ml", lot:"LOT 24M-011", rating:4.5, reviewCount:1298, trend:0, swatch:"#D8C9AE", ingredients:["우드앰버향료","알로에베라추출물","판테놀"], stock:245, desc:"은은한 향과 함께 정전기를 잡아주는 헤어 미스트." },
+  { id:60, name:"시어버터 바디버터", category:"바디케어", skinType:"건성", price:24000, icon:'jar', volume:"200ml", lot:"LOT 24M-014", rating:4.75, reviewCount:5541, trend:2, swatch:"#C4D1CB", ingredients:["시어버터","세라마이드엔피","글리세린","토코페롤"], stock:288, desc:"고농축 시어버터가 온종일 촉촉함을 채워주는 버터." },
+  { id:61, name:"바디오일", category:"바디케어", skinType:"건성", price:18000, icon:'dropper', volume:"100ml", lot:"LOT 24M-019", rating:4.42, reviewCount:817, trend:0, swatch:"#EDE2CB", ingredients:["호호바오일","아르간오일","토코페롤","글리세린"], stock:174, desc:"가볍게 흡수되는 데일리 바디오일." },
+  { id:62, name:"핸드크림", category:"바디케어", skinType:"건성", price:12000, icon:'tube', volume:"50ml", lot:"LOT 24M-024", rating:4.62, reviewCount:29014, trend:5, swatch:"#DCE0D6", ingredients:["시어버터","글리세린","판테놀","다이메티콘"], stock:392, desc:"거칠어진 손을 촉촉하게 채워주는 핸드크림." },
+  { id:63, name:"롤온 스틱 데오", category:"바디케어", skinType:"전체", price:13000, originalPrice:16000, icon:'stick', volume:"40g", lot:"LOT 24N-004", rating:4.53, reviewCount:2098, trend:0, swatch:"#DFD2DE", ingredients:["베이킹소다","알로에베라추출물","글리세린","1,2-헥산다이올"], stock:161, desc:"산뜻하게 발리는 저자극 롤온 데오도런트." },
+  { id:64, name:"릴렉싱 바디미스트", category:"바디케어", skinType:"전체", price:20000, icon:'spray', volume:"150ml", lot:"LOT 24N-008", rating:4.48, reviewCount:1077, trend:'NEW', swatch:"#C9C0A9", ingredients:["우드앰버향료","글리세린","1,2-헥산다이올","토코페롤"], stock:198, desc:"은은한 잔향이 오래 지속되는 릴렉싱 바디미스트." },
 ];
 
 /* ---------------- 렌더링 로직 ---------------- */
@@ -1855,6 +1954,76 @@ function renderAiRecommendations(){
     });
   });
 }
+
+/* ---------------- 카테고리/피부타입 정보 모달 ---------------- */
+const CATEGORY_INFO = {
+  '스킨케어': '크림·세럼·토너 등 얼굴에 매일 사용하는 기초 제품이에요.',
+  '클렌징': '메이크업과 하루의 노폐물을 씻어내는 세안 제품이에요.',
+  '메이크업': '피부 표현과 포인트를 위한 색조 제품이에요.',
+  '헤어케어': '두피와 모발을 관리하는 샴푸·트리트먼트예요.',
+  '바디케어': '얼굴 이외 전신 케어를 위한 보습·세정 제품이에요.',
+};
+const SKINTYPE_INFO = {
+  '건성': '유분이 부족해 당김과 각질이 잘 생기는 피부예요. 고보습 제품이 잘 맞아요.',
+  '지성': '피지 분비가 많아 번들거림과 모공이 고민인 피부예요. 산뜻한 제품을 추천해요.',
+  '복합성': 'T존은 지성, 볼 주변은 건성처럼 부위별로 다르게 나타나는 피부예요.',
+  '민감성': '자극에 쉽게 붉어지거나 트러블이 올라오는 피부예요. 저자극 제품이 중요해요.',
+  '전체': '피부타입과 상관없이 두루 쓸 수 있도록 만든 제품이에요.',
+};
+
+const infoModal = document.getElementById('info-modal');
+const infoTabBody = document.getElementById('info-tab-body');
+const infoModalTitle = document.getElementById('info-modal-title');
+document.getElementById('info-close').addEventListener('click', ()=>infoModal.close());
+
+document.querySelectorAll('.info-tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.info-tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderInfoTab(btn.dataset.tab);
+  });
+});
+
+function renderInfoTab(tab){
+  infoModalTitle.textContent = tab === 'category' ? '카테고리' : '피부타입';
+  const info = tab === 'category' ? CATEGORY_INFO : SKINTYPE_INFO;
+  const field = tab === 'category' ? 'category' : 'skinType';
+  infoTabBody.innerHTML = Object.entries(info).map(([name, desc])=>{
+    const count = PRODUCTS.filter(p=>p[field] === name).length;
+    return `
+      <button class="info-item" type="button" data-value="${name}" data-field="${field}">
+        <div>
+          <div class="info-item-name">${name}</div>
+          <div class="info-item-desc">${desc}</div>
+        </div>
+        <span class="info-item-count">${count}개</span>
+      </button>
+    `;
+  }).join('');
+  infoTabBody.querySelectorAll('.info-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      const f = item.dataset.field;
+      const value = item.dataset.value;
+      if(f === 'category'){ fCategory.value = value; }
+      else { fSkin.value = value === '전체' ? '' : value; }
+      applyFilters();
+      infoModal.close();
+      document.querySelector('.grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+function openInfoModal(tab){
+  document.querySelectorAll('.info-tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab === tab));
+  renderInfoTab(tab);
+  infoModal.showModal();
+}
+
+document.getElementById('stat-products').addEventListener('click', ()=>{
+  document.querySelector('.grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+document.getElementById('stat-categories').addEventListener('click', ()=>openInfoModal('category'));
+document.getElementById('stat-skintypes').addEventListener('click', ()=>openInfoModal('skinType'));
 
 /* ---------------- 검색 모달 ---------------- */
 const searchModal = document.getElementById('search-modal');
