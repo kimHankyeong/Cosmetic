@@ -8,10 +8,10 @@
 <!-- Pico.css : 클래스 없이도 버튼/폼/표가 정돈됨 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 
-<!-- 타이포그래피 : 한글 세리프(Gowun Batang) + 본문(Noto Sans KR) + 모노(IBM Plex Mono) -->
+<!-- 타이포그래피 : 캐릭터 있는 세리프(Fraunces) + 클린 산세리프(Inter) + 모노(IBM Plex Mono) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -25,8 +25,8 @@
     --line: #D6E0D3;
     --mono-accent: #8B9686;
 
-    --font-display: 'Gowun Batang', serif;
-    --font-body: 'Noto Sans KR', sans-serif;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
 
     --pico-font-family: var(--font-body);
@@ -39,13 +39,27 @@
   }
 
   body{
-    background:
+    background-color: #E1EDE2;
+    background-image:
       radial-gradient(circle at 16% 12%, rgba(212,178,106,0.28), transparent 40%),
       radial-gradient(circle at 84% 8%, rgba(124,146,94,0.28), transparent 44%),
       radial-gradient(ellipse at 50% 35%, rgba(111,163,156,0.30), transparent 60%),
       linear-gradient(180deg, #F3F7F2 0%, #E1EDE2 100%);
-    background-attachment: fixed;
     min-height: 100vh;
+    position: relative;
+  }
+  /* 은은한 종이 질감 노이즈. position:absolute로 콘텐츠 높이만큼만 덮어서
+     모바일에서 fixed 배경이 깨지는 문제를 피함(콘텐츠와 함께 스크롤됨). */
+  body::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.045' numOctaves='3' seed='11' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0 0 0 0 0.18  0 0 0 0 0.37  0 0 0 0 0.34  0 0 0 0.85 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 360px 260px;
+    opacity: 0.8;
+    mix-blend-mode: overlay;
+    pointer-events: none;
   }
 
   /* ---------- Hero ---------- */
@@ -161,15 +175,39 @@
     letter-spacing: 0.05em;
     overflow: hidden;
   }
+  .card-swatch:not(.has-photo){
+    background-image:
+      radial-gradient(ellipse at 38% 28%, rgba(255,255,255,0.55), transparent 55%),
+      radial-gradient(ellipse at 68% 82%, rgba(0,0,0,0.10), transparent 60%);
+  }
   .card-icon{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -55%);
-    width: 46%;
-    color: rgba(32,36,31,0.4);
+    width: 52%;
+    color: rgba(32,36,31,0.5);
+    filter: drop-shadow(0 6px 8px rgba(20,24,18,0.18));
   }
-  .card-icon svg, .detail-icon svg, .cart-item .ci-icon svg{
+  .card-photo{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-swatch::after{
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 46%;
+    background: linear-gradient(transparent, rgba(20,24,18,0.55));
+    pointer-events: none;
+  }
+  .card-swatch:not(.has-photo)::after{ display: none; }
+  .card-vol{ position: relative; }
+  .card-swatch.has-photo .card-vol{ color: var(--surface); }
+  .card-icon svg, .detail-icon svg, .cart-item .ci-icon svg, .ai-reco-card .ci-icon svg{
     width: 100%;
     height: 100%;
     fill: none;
@@ -180,15 +218,24 @@
   }
   .discount-tag{
     position: absolute;
-    top: 0.6rem;
-    left: 0.6rem;
-    background: var(--sage-deep);
-    color: var(--surface);
+    top: -10px;
+    left: -10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, #E2594C, #B93A2C 62%, #8C2A20 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 500;
-    padding: 0.18rem 0.42rem;
-    border-radius: 2px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-align: center;
+    box-shadow: 0 3px 7px rgba(20,10,8,0.32);
+    z-index: 3;
   }
   .wish-btn{
     position: absolute;
@@ -280,7 +327,18 @@
   /* ---------- Detail modal ---------- */
   dialog article{ max-width: 640px; background: var(--surface); }
   .detail-swatch{ position: relative; aspect-ratio: 16/8; border-radius: 2px; margin-bottom: 1.2rem; overflow: hidden; }
-  .detail-icon{ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22%; color: rgba(32,36,31,0.4); }
+  .detail-swatch:not(.has-photo){
+    background-image:
+      radial-gradient(ellipse at 38% 30%, rgba(255,255,255,0.55), transparent 55%),
+      radial-gradient(ellipse at 68% 85%, rgba(0,0,0,0.10), transparent 60%);
+  }
+  .detail-icon{
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 26%;
+    color: rgba(32,36,31,0.5);
+    filter: drop-shadow(0 8px 10px rgba(20,24,18,0.2));
+  }
+  .detail-photo{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .detail-lot{ font-family: var(--font-mono); font-size: 0.72rem; color: var(--mono-accent); letter-spacing: 0.06em; margin-bottom: 0.4rem; }
   dialog h2{ font-family: var(--font-display); font-weight: 700; margin-bottom: 0.2rem; }
   .detail-price{ font-family: var(--font-mono); font-size: 1.15rem; color: var(--sage-deep); margin-bottom: 1rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
@@ -379,6 +437,7 @@
     display: none;
   }
   .review-form-error.show, .opt-error.show{ display: block; }
+  .review-form-note{ font-family: var(--font-mono); font-size: 0.7rem; color: var(--mono-accent); margin-top: 0.5rem; }
   .review-list{ display: flex; flex-direction: column; gap: 0.9rem; }
   .review-item{ border-bottom: 1px solid var(--line); padding-bottom: 0.9rem; }
   .review-item .review-stars{ color: var(--sage-deep); font-size: 0.85rem; margin-bottom: 0.3rem; }
@@ -398,7 +457,7 @@
     color: var(--ink-soft); letter-spacing: 0.05em;
     z-index: 1;
   }
-  .card.sold-out .card-icon, .card.sold-out .discount-tag{ opacity: 0.3; }
+  .card.sold-out .card-icon, .card.sold-out .card-photo, .card.sold-out .discount-tag{ opacity: 0.3; }
   .card.sold-out h3, .card.sold-out .price, .card.sold-out .tags{ opacity: 0.45; }
   .stock-low-text{ font-family: var(--font-mono); font-size: 0.72rem; color: var(--rose); margin-top: -0.3rem; margin-bottom: 0.6rem; }
 
@@ -517,6 +576,29 @@
     display: flex; align-items: center; justify-content: center;
     padding: 0 0.3rem;
   }
+  .search-fab{
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+  }
+  .search-fab svg{ width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .ai-fab{
+    display: flex; align-items: center; gap: 0.4rem;
+    background: var(--sage-deep);
+    color: var(--surface);
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .ai-fab svg{ width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
 
   /* ---------- 카트 / 위시 모달 ---------- */
   #cart-modal article, #wishlist-modal article{ max-width: 480px; background: var(--surface); }
@@ -535,6 +617,7 @@
   }
   .cart-item{ display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
   .cart-item .ci-icon{ width: 36px; height: 36px; flex-shrink: 0; color: rgba(32,36,31,0.45); }
+  .cart-item .ci-photo{ width: 36px; height: 36px; flex-shrink: 0; object-fit: cover; border-radius: 4px; }
   .cart-item .ci-info{ flex: 1; }
   .cart-item .ci-name{ font-size: 0.9rem; color: var(--ink); margin-bottom: 0.2rem; }
   .cart-item .ci-meta{ font-family: var(--font-mono); font-size: 0.76rem; color: var(--mono-accent); }
@@ -602,6 +685,70 @@
   .auth-greeting strong{ font-family: var(--font-display); }
   .auth-greeting .auth-email{ font-family: var(--font-mono); font-size: 0.76rem; color: var(--mono-accent); margin-top: 0.3rem; }
 
+  /* ---------- 챗봇상담 모달 ---------- */
+  #ai-modal article{ max-width: 480px; background: var(--surface); display: flex; flex-direction: column; }
+  #ai-modal header{ display: flex; align-items: center; justify-content: space-between; }
+  #ai-modal header strong{ font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .ai-chat{ display: flex; flex-direction: column; gap: 0.7rem; padding-bottom: 0.4rem; }
+  .ai-bubble{ max-width: 82%; padding: 0.6rem 0.85rem; border-radius: 10px; font-size: 0.88rem; line-height: 1.5; }
+  .ai-bubble.from-ai{ align-self: flex-start; background: var(--bg); color: var(--ink); border-bottom-left-radius: 2px; }
+  .ai-bubble.from-user{ align-self: flex-end; background: var(--sage-deep); color: var(--surface); border-bottom-right-radius: 2px; }
+  .ai-quick-replies{ display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
+  .ai-quick-replies button{
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    background: var(--surface);
+    border: 1px solid var(--sage);
+    color: var(--sage-deep);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+  }
+  .ai-quick-replies button:hover{ background: var(--bg); }
+  .ai-reco-card{
+    display: flex; align-items: center; gap: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.6rem 0.7rem;
+    margin-top: 0.4rem;
+    background: var(--surface);
+  }
+  .ai-reco-card .ci-icon, .ai-reco-card .ci-photo{ width: 40px; height: 40px; flex-shrink: 0; }
+  .ai-reco-card .ci-icon{ color: rgba(33,46,30,0.45); }
+  .ai-reco-card .ci-photo{ object-fit: cover; border-radius: 4px; }
+  .ai-reco-card .ai-reco-info{ flex: 1; }
+  .ai-reco-card .ai-reco-name{ font-size: 0.88rem; color: var(--ink); margin-bottom: 0.15rem; }
+  .ai-reco-card .ai-reco-meta{ font-family: var(--font-mono); font-size: 0.74rem; color: var(--mono-accent); }
+  .ai-reco-view-btn{
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--sage-deep);
+    border: 1px solid var(--sage);
+    border-radius: 2px;
+    padding: 0.3rem 0.55rem;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .ai-restart-btn{
+    align-self: center;
+    margin-top: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+  }
+
+  /* ---------- 검색 모달 ---------- */
+  #search-modal article{ max-width: 400px; background: var(--surface); }
+  #search-modal header{ display: flex; align-items: center; justify-content: space-between; }
+  #search-modal header strong{ font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .search-modal-body input{ width: 100%; }
+
   footer.site-footer{
     border-top: 1px solid var(--line);
     padding: 2rem 0;
@@ -621,9 +768,16 @@
 </head>
 <body>
 <div class="fab-row">
+  <button class="search-fab" id="search-fab" type="button" aria-label="검색 열기">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+  </button>
   <button class="wish-fab auth-fab" id="auth-fab" type="button" aria-label="로그인 / 회원가입">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
     <span id="auth-fab-label">로그인</span>
+  </button>
+  <button class="ai-fab" id="ai-fab" type="button" aria-label="챗봇상담 열기">
+    <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-1.5-.4-2.9-1.1-4.1"/><path d="M12 3v4M19 5l-2.8 2.8"/><circle cx="12" cy="12" r="3"/></svg>
+    챗봇상담
   </button>
   <button class="wish-fab" id="wish-fab" type="button" aria-label="위시리스트 열기">
     <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.8.7 6.4 3.2C14.6 4.7 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.3 12 21 12 21z"/></svg>
@@ -703,6 +857,23 @@
   </article>
 </dialog>
 
+<dialog id="ai-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="ai-close"></button><strong>챗봇 피부상담</strong></header>
+    <div class="ai-chat" id="ai-chat-body"></div>
+  </article>
+</dialog>
+
+<dialog id="search-modal">
+  <article>
+    <header><button aria-label="Close" rel="prev" id="search-modal-close"></button><strong>검색</strong></header>
+    <div class="search-modal-body">
+      <input type="search" id="search-modal-input" class="opt-address" placeholder="제품명, 성분으로 검색…" autofocus>
+      <button class="review-submit-btn" id="search-modal-go" type="button" style="margin-top:0.8rem; width:100%;">검색</button>
+    </div>
+  </article>
+</dialog>
+
 <footer class="site-footer container">
   <span>젊음의 샘물 · PROTOTYPE STAGE 1</span>
   <span>DATA: MOCK · 32 SKUs</span>
@@ -722,34 +893,34 @@ const PRODUCTS = [
   { id:4,  name:"글로우 카밍 선크림", category:"스킨케어", skinType:"전체", price:24000, icon:'tube', volume:"50ml", lot:"LOT 24B-007", rating:4.37, reviewCount:1214, trend:0, swatch:"#EADFCB", ingredients:["티타늄디옥사이드","나이아신아마이드","알란토인","판테놀","글리세린","다이메티콘","에틸헥실메톡시신나메이트"], stock:352, desc:"SPF50+ PA++++, 백탁 없이 은은한 광채를 더하는 데일리 자외선 차단제." },
   { id:5,  name:"미네랄 립 틴트", category:"메이크업", skinType:"전체", price:16000, originalPrice:19000, icon:'stick', volume:"4g", lot:"LOT 24B-019", rating:4.33, reviewCount:845, trend:-3, swatch:"#C9948A", ingredients:["칸데릴라왁스","호호바오일","마이카","시어버터","토코페롤","1,2-헥산다이올"], stock:30, desc:"천연 미네랄 안료로 입술 결에 따라 자연스럽게 스미는 세미매트 틴트." },
   { id:6,  name:"콜라겐 아이크림", category:"스킨케어", skinType:"건성", price:38000, originalPrice:49000, icon:'jar', volume:"20ml", lot:"LOT 24C-003", rating:4.64, reviewCount:6376, trend:1, swatch:"#E4D9C6", ingredients:["가수분해콜라겐","아데노신","펩타이드","글리세린","다이메티콘","토코페롤","판테놀"], stock:39, desc:"저분자 콜라겐이 눈가 결에 탄력감을 더해주는 아이 전용 크림." },
-  { id:7,  name:"클레이 모공 팩", category:"스킨케어", skinType:"지성", price:21000, icon:'tube', volume:"100ml", lot:"LOT 24C-010", rating:4.61, reviewCount:8506, trend:-3, swatch:"#B0A79A", ingredients:["카올린","벤토나이트","살리실릭애씨드","글리세린","알란토인","판테놀"], stock:356, desc:"카올린·벤토나이트가 모공 속 피지와 각질을 흡착해내는 워시오프 팩." },
+  { id:7,  name:"클레이 모공 팩", category:"스킨케어", skinType:"지성", price:21000, icon:'tube', volume:"100ml", lot:"LOT 24C-010", rating:4.64, reviewCount:85066, trend:-3, swatch:"#B0A79A", ingredients:["카올린","벤토나이트","살리실릭애씨드","글리세린","알란토인","판테놀"], stock:356, desc:"카올린·벤토나이트가 모공 속 피지와 각질을 흡착해내는 워시오프 팩." },
   { id:8,  name:"저자극 클렌징 오일", category:"클렌징", skinType:"민감성", price:23000, icon:'dropper', volume:"200ml", lot:"LOT 24C-015", rating:4.58, reviewCount:2156, trend:0, swatch:"#EFE8D6", ingredients:["포도씨오일","해바라기씨오일","비타민E","글리세린","1,2-헥산다이올","토코페롤"], stock:122, desc:"무향·무색소 포뮬러로 메이크업까지 자극 없이 녹여내는 클렌징 오일." },
-  { id:9,  name:"시카 리페어 크림", category:"스킨케어", skinType:"민감성", price:29000, originalPrice:34000, icon:'jar', volume:"50ml", lot:"LOT 24D-001", rating:4.72, reviewCount:5935, trend:-3, swatch:"#C4D0BC", ingredients:["병풀추출물","마데카소사이드","아시아티코사이드","판테놀","글리세린","알란토인"], stock:182, desc:"병풀 추출물이 예민해진 피부를 진정시키고 장벽을 회복시키는 크림." },
+  { id:9,  name:"시카 리페어 크림", category:"스킨케어", skinType:"민감성", price:29000, originalPrice:34000, icon:'jar', volume:"50ml", lot:"LOT 24D-001", rating:4.72, reviewCount:59354, trend:-3, swatch:"#C4D0BC", ingredients:["병풀추출물","마데카소사이드","아시아티코사이드","판테놀","글리세린","알란토인"], stock:182, desc:"병풀 추출물이 예민해진 피부를 진정시키고 장벽을 회복시키는 크림." },
   { id:10, name:"쿠션 파운데이션", category:"메이크업", skinType:"전체", price:34000, icon:'compact', volume:"15g", lot:"LOT 24D-006", rating:4.74, reviewCount:3547, trend:-3, swatch:"#E8D4BC", ingredients:["티타늄디옥사이드","실리카","나이아신아마이드","글리세린","다이메티콘","1,2-헥산다이올"], stock:273, desc:"피부 톤을 자연스럽게 보정하며 SPF50+로 자외선까지 커버하는 쿠션." },
   { id:11, name:"나이아신아마이드 세럼", category:"스킨케어", skinType:"복합성", price:26000, originalPrice:32000, icon:'dropper', volume:"30ml", lot:"LOT 24D-012", rating:4.39, reviewCount:25138, trend:5, swatch:"#D9DED0", ingredients:["나이아신아마이드","아연피시디온","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:331, desc:"나이아신아마이드 10%로 피부 톤과 결을 정돈해주는 브라이트닝 세럼." },
-  { id:12, name:"밤 클렌저", category:"클렌징", skinType:"건성", price:25000, icon:'jar', volume:"80ml", lot:"LOT 24D-018", rating:4.64, reviewCount:6589, trend:-4, swatch:"#D8C8A8", ingredients:["시어버터","호호바에스터","글리세린","1,2-헥산다이올","토코페롤","다이메티콘"], stock:190, desc:"체온에 녹는 밤 텍스처로 각질까지 부드럽게 정리하는 클렌징 밤." },
-  { id:13, name:"레티놀 나이트 세럼", category:"스킨케어", skinType:"복합성", price:41000, originalPrice:53000, icon:'dropper', volume:"30ml", lot:"LOT 24E-002", rating:4.34, reviewCount:8214, trend:0, swatch:"#CFC2B6", ingredients:["레티놀","스쿠알란","토코페롤","판테놀","글리세린","1,2-헥산다이올"], stock:0, desc:"저자극 레티놀 캡슐화 기술로 밤사이 결 정돈을 돕는 나이트 세럼." },
-  { id:14, name:"매트 쿠션", category:"메이크업", skinType:"지성", price:33000, originalPrice:40000, icon:'compact', volume:"15g", lot:"LOT 24E-009", rating:4.34, reviewCount:5730, trend:-3, swatch:"#DCC6AC", ingredients:["실리카","티타늄디옥사이드","나이아신아마이드","글리세린","다이메티콘","1,2-헥산다이올"], stock:356, desc:"피지 컨트롤 파우더가 배합되어 번들거림을 잡아주는 매트 마무리 쿠션." },
-  { id:15, name:"히알루론산 토너", category:"스킨케어", skinType:"건성", price:19000, icon:'pump', volume:"200ml", lot:"LOT 24E-014", rating:4.31, reviewCount:4202, trend:1, swatch:"#E1E7DC", ingredients:["히알루론산","베타인","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:271, desc:"5종 히알루론산이 즉각적인 수분감을 채워주는 첫 단계 토너." },
-  { id:16, name:"선물용 미니 키트", category:"스킨케어", skinType:"전체", price:45000, originalPrice:60000, icon:'box', volume:"5종", lot:"LOT 24E-021", rating:4.43, reviewCount:723, trend:-4, swatch:"#EDE3CE", ingredients:["세라마이드엔피","히알루론산","판테놀","나이아신아마이드","글리세린","1,2-헥산다이올"], stock:7, desc:"베스트 5종을 미니 사이즈로 구성한 트라이얼·선물용 세트." },
+  { id:12, name:"밤 클렌저", category:"클렌징", skinType:"건성", price:25000, icon:'jar', volume:"80ml", lot:"LOT 24D-018", rating:4.64, reviewCount:65898, trend:-4, swatch:"#D8C8A8", ingredients:["시어버터","호호바에스터","글리세린","1,2-헥산다이올","토코페롤","다이메티콘"], stock:190, desc:"체온에 녹는 밤 텍스처로 각질까지 부드럽게 정리하는 클렌징 밤." },
+  { id:13, name:"레티놀 나이트 세럼", category:"스킨케어", skinType:"복합성", price:41000, originalPrice:53000, icon:'dropper', volume:"30ml", lot:"LOT 24E-002", rating:4.34, reviewCount:82141, trend:0, swatch:"#CFC2B6", ingredients:["레티놀","스쿠알란","토코페롤","판테놀","글리세린","1,2-헥산다이올"], stock:0, desc:"저자극 레티놀 캡슐화 기술로 밤사이 결 정돈을 돕는 나이트 세럼." },
+  { id:14, name:"매트 쿠션", category:"메이크업", skinType:"지성", price:33000, originalPrice:40000, icon:'compact', volume:"15g", lot:"LOT 24E-009", rating:4.34, reviewCount:57302, trend:-3, swatch:"#DCC6AC", ingredients:["실리카","티타늄디옥사이드","나이아신아마이드","글리세린","다이메티콘","1,2-헥산다이올"], stock:356, desc:"피지 컨트롤 파우더가 배합되어 번들거림을 잡아주는 매트 마무리 쿠션." },
+  { id:15, name:"히알루론산 토너", category:"스킨케어", skinType:"건성", price:19000, icon:'pump', volume:"200ml", lot:"LOT 24E-014", rating:4.31, reviewCount:42026, trend:1, swatch:"#E1E7DC", ingredients:["히알루론산","베타인","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:271, desc:"5종 히알루론산이 즉각적인 수분감을 채워주는 첫 단계 토너." },
+  { id:16, name:"선물용 미니 키트", category:"스킨케어", skinType:"전체", price:45000, originalPrice:60000, icon:'box', volume:"5종", lot:"LOT 24E-021", rating:4.43, reviewCount:7238, trend:-4, swatch:"#EDE3CE", ingredients:["세라마이드엔피","히알루론산","판테놀","나이아신아마이드","글리세린","1,2-헥산다이올"], stock:7, desc:"베스트 5종을 미니 사이즈로 구성한 트라이얼·선물용 세트." },
   { id:17, name:"진정 스팟 패치", category:"스킨케어", skinType:"지성", price:9000, icon:'patch', volume:"24매", lot:"LOT 24F-004", rating:4.35, reviewCount:2139, trend:0, swatch:"#C9CFC1", ingredients:["하이드로콜로이드","티트리잎오일","판테놀","알란토인","1,2-헥산다이올"], stock:4, desc:"트러블 부위에 붙여 밤사이 진정시켜주는 하이드로콜로이드 패치." },
-  { id:18, name:"브로우 마스카라", category:"메이크업", skinType:"전체", price:12000, icon:'stick', volume:"7ml", lot:"LOT 24F-008", rating:4.62, reviewCount:6702, trend:0, swatch:"#A99C8D", ingredients:["칸데릴라왁스","마이카","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:392, desc:"자연스러운 결 표현과 색을 더하는 브로우 전용 마스카라." },
-  { id:19, name:"딥 슬리핑 마스크", category:"스킨케어", skinType:"건성", price:31000, originalPrice:36000, icon:'jar', volume:"100ml", lot:"LOT 24F-013", rating:4.57, reviewCount:918, trend:2, swatch:"#DCD3E0", ingredients:["세라마이드엔피","스쿠알란","판테놀","글리세린","알란토인","토코페롤"], stock:265, desc:"밤사이 수분막을 형성해 다음날 아침까지 이어지는 슬리핑 팩." },
+  { id:18, name:"브로우 마스카라", category:"메이크업", skinType:"전체", price:12000, icon:'stick', volume:"7ml", lot:"LOT 24F-008", rating:4.82, reviewCount:67024, trend:0, swatch:"#A99C8D", ingredients:["칸데릴라왁스","마이카","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:392, desc:"자연스러운 결 표현과 색을 더하는 브로우 전용 마스카라." },
+  { id:19, name:"딥 슬리핑 마스크", category:"스킨케어", skinType:"건성", price:31000, originalPrice:36000, icon:'jar', volume:"100ml", lot:"LOT 24F-013", rating:4.87, reviewCount:918, trend:2, swatch:"#DCD3E0", ingredients:["세라마이드엔피","스쿠알란","판테놀","글리세린","알란토인","토코페롤"], stock:265, desc:"밤사이 수분막을 형성해 다음날 아침까지 이어지는 슬리핑 팩." },
   { id:20, name:"약산성 폼 클렌저", category:"클렌징", skinType:"복합성", price:17000, icon:'pump', volume:"120ml", lot:"LOT 24F-020", rating:4.31, reviewCount:8975, trend:4, swatch:"#D6DED2", ingredients:["코카미도프로필베타인","글리세릴스테아레이트","판테놀","글리세린","알란토인","1,2-헥산다이올"], stock:238, desc:"조밀한 거품으로 피지를 씻어내고 수분감을 남기는 약산성 폼 클렌저." },
 
   { id:21, name:"쿨링 두피 토너", category:"헤어케어", skinType:"지성", price:22000, icon:'pump', volume:"400ml", lot:"LOT 24G-002", rating:4.62, reviewCount:3644, trend:'NEW', swatch:"#C7D3CE", ingredients:["멘톨","이눌린","판테놀","토코페롤","글리세린","1,2-헥산다이올"], stock:389, desc:"멘톨 성분이 두피에 청량감을 주고 유분을 잡아주는 쿨링 토너." },
-  { id:22, name:"단백질 헤어 트리트먼트", category:"헤어케어", skinType:"건성", price:26000, originalPrice:32000, icon:'tube', volume:"250ml", lot:"LOT 24G-006", rating:4.58, reviewCount:7985, trend:0, swatch:"#DAD0BC", ingredients:["가수분해케라틴","가수분해실크","판테놀","세틸알코올","글리세린","시어버터"], stock:349, desc:"손상모에 단백질을 채워 갈라짐을 줄이고 결을 매끈하게 하는 트리트먼트." },
+  { id:22, name:"단백질 헤어 트리트먼트", category:"헤어케어", skinType:"건성", price:26000, originalPrice:32000, icon:'tube', volume:"250ml", lot:"LOT 24G-006", rating:4.87, reviewCount:79853, trend:0, swatch:"#DAD0BC", ingredients:["가수분해케라틴","가수분해실크","판테놀","세틸알코올","글리세린","시어버터"], stock:349, desc:"손상모에 단백질을 채워 갈라짐을 줄이고 결을 매끈하게 하는 트리트먼트." },
   { id:23, name:"두피 앰플", category:"헤어케어", skinType:"민감성", price:34000, icon:'dropper', volume:"80ml", lot:"LOT 24G-011", rating:4.54, reviewCount:1591, trend:'NEW', swatch:"#CBD6C1", ingredients:["판테놀","비오틴","나이아신아마이드","글리세린","알란토인","1,2-헥산다이올"], stock:2, desc:"자극 없이 두피 밸런스를 잡아주는 저자극 두피 전용 앰플." },
   { id:24, name:"실리콘프리 컨디셔너", category:"헤어케어", skinType:"전체", price:19000, icon:'pump', volume:"300ml", lot:"LOT 24G-014", rating:4.34, reviewCount:575, trend:5, swatch:"#E6DCC8", ingredients:["세틸알코올","베헨트라이모늄클로라이드","시어버터","글리세린","판테놀","아르간오일"], stock:56, desc:"실리콘 없이 모발의 수분막을 채워 가볍게 정돈해주는 컨디셔너." },
   { id:25, name:"헤어 오일 세럼", category:"헤어케어", skinType:"건성", price:23000, originalPrice:27000, icon:'dropper', volume:"80ml", lot:"LOT 24G-018", rating:4.33, reviewCount:300, trend:0, swatch:"#E9D9B8", ingredients:["아르간오일","호호바오일","동백오일","토코페롤","향료","1,2-헥산다이올"], stock:132, desc:"모발 끝 갈라짐과 정전기를 잡아주는 가벼운 마감 오일." },
 
   { id:26, name:"바디 로션", category:"바디케어", skinType:"건성", price:20000, icon:'pump', volume:"300ml", lot:"LOT 24H-001", rating:4.67, reviewCount:588, trend:'NEW', swatch:"#EAE1CE", ingredients:["시어버터","세라마이드엔피","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:301, desc:"시어버터가 하루 종일 촉촉함을 이어주는 데일리 바디 로션." },
-  { id:27, name:"각질 제거 바디 스크럽", category:"바디케어", skinType:"전체", price:24000, originalPrice:30000, icon:'jar', volume:"250ml", lot:"LOT 24H-005", rating:4.60, reviewCount:2766, trend:4, swatch:"#D8C9AE", ingredients:["설탕","호호바에스터","시어버터","글리세린","토코페롤","1,2-헥산다이올"], stock:52, desc:"입자가 고운 슈가 스크럽으로 묵은 각질을 부드럽게 밀어내는 스크럽." },
-  { id:28, name:"항균 핸드워시", category:"바디케어", skinType:"지성", price:16000, originalPrice:20000, icon:'pump', volume:"400ml", lot:"LOT 24H-009", rating:4.51, reviewCount:1874, trend:1, swatch:"#C4D1CB", ingredients:["코카미도프로필베타인","티트리잎오일","글리세린","판테놀","시트릭애씨드","1,2-헥산다이올"], stock:41, desc:"티트리 성분으로 산뜻하게 세정하며 촉촉함을 남기는 핸드워시." },
-  { id:29, name:"풋 & 힐 크림", category:"바디케어", skinType:"건성", price:14000, icon:'tube', volume:"100ml", lot:"LOT 24H-013", rating:4.55, reviewCount:4116, trend:5, swatch:"#EDE2CB", ingredients:["시어버터","우레아","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:301, desc:"거칠어진 발 각질에 수분과 유분을 채워주는 고보습 풋 크림." },
+  { id:27, name:"각질 제거 바디 스크럽", category:"바디케어", skinType:"전체", price:24000, originalPrice:30000, icon:'jar', volume:"250ml", lot:"LOT 24H-005", rating:4.87, reviewCount:2766, trend:4, swatch:"#D8C9AE", ingredients:["설탕","호호바에스터","시어버터","글리세린","토코페롤","1,2-헥산다이올"], stock:52, desc:"입자가 고운 슈가 스크럽으로 묵은 각질을 부드럽게 밀어내는 스크럽." },
+  { id:28, name:"항균 핸드워시", category:"바디케어", skinType:"지성", price:16000, originalPrice:20000, icon:'pump', volume:"400ml", lot:"LOT 24H-009", rating:4.9, reviewCount:18741, trend:1, swatch:"#C4D1CB", ingredients:["코카미도프로필베타인","티트리잎오일","글리세린","판테놀","시트릭애씨드","1,2-헥산다이올"], stock:41, desc:"티트리 성분으로 산뜻하게 세정하며 촉촉함을 남기는 핸드워시." },
+  { id:29, name:"풋 & 힐 크림", category:"바디케어", skinType:"건성", price:14000, icon:'tube', volume:"100ml", lot:"LOT 24H-013", rating:4.75, reviewCount:41160, trend:5, swatch:"#EDE2CB", ingredients:["시어버터","우레아","글리세린","판테놀","토코페롤","1,2-헥산다이올"], stock:301, desc:"거칠어진 발 각질에 수분과 유분을 채워주는 고보습 풋 크림." },
   { id:30, name:"롤온 데오도런트", category:"바디케어", skinType:"전체", price:11000, icon:'stick', volume:"50ml", lot:"LOT 24H-017", rating:4.52, reviewCount:3886, trend:0, swatch:"#DCE0D6", ingredients:["베이킹소다","포타슘알럼","글리세린","알란토인","향료","1,2-헥산다이올"], stock:0, desc:"자극이 적은 성분으로 땀과 냄새를 케어하는 롤온 데오도런트." },
-  { id:31, name:"바디 미스트", category:"바디케어", skinType:"전체", price:18000, originalPrice:22000, icon:'spray', volume:"150ml", lot:"LOT 24H-021", rating:4.48, reviewCount:1369, trend:'NEW', swatch:"#DFD2DE", ingredients:["우드앰버향료","알로에베라추출물","판테놀","토코페롤","글리세린","1,2-헥산다이올"], stock:201, desc:"은은하게 퍼지는 우디 플로럴 향으로 산뜻하게 마무리하는 바디 미스트." },
-  { id:32, name:"헤어 스칼프 스케일러", category:"헤어케어", skinType:"지성", price:21000, icon:'pump', volume:"150ml", lot:"LOT 24H-024", rating:4.43, reviewCount:6320, trend:2, swatch:"#C9C0A9", ingredients:["이눌린","멘톨","살리실릭애씨드","글리세린","판테놀","1,2-헥산다이올"], stock:249, desc:"두피의 묵은 각질과 잔여물을 씻어내는 주 1~2회 스케일링 케어." },
+  { id:31, name:"바디 미스트", category:"바디케어", skinType:"전체", price:18000, originalPrice:22000, icon:'spray', volume:"150ml", lot:"LOT 24H-021", rating:4.82, reviewCount:1369, trend:'NEW', swatch:"#DFD2DE", ingredients:["우드앰버향료","알로에베라추출물","판테놀","토코페롤","글리세린","1,2-헥산다이올"], stock:201, desc:"은은하게 퍼지는 우디 플로럴 향으로 산뜻하게 마무리하는 바디 미스트." },
+  { id:32, name:"헤어 스칼프 스케일러", category:"헤어케어", skinType:"지성", price:21000, icon:'pump', volume:"150ml", lot:"LOT 24H-024", rating:4.43, reviewCount:63209, trend:2, swatch:"#C9C0A9", ingredients:["이눌린","멘톨","살리실릭애씨드","글리세린","판테놀","1,2-헥산다이올"], stock:249, desc:"두피의 묵은 각질과 잔여물을 씻어내는 주 1~2회 스케일링 케어." },
 ];
 
 /* ---------------- 렌더링 로직 ---------------- */
@@ -788,6 +959,24 @@ const ICONS = {
   box: `<svg viewBox="0 0 64 64"><rect x="10" y="20" width="44" height="34" rx="3"/><path d="M10 30h44"/><path d="M32 20v34"/><path d="M22 20c0-6 4-10 10-10s10 4 10 10"/></svg>`,
 };
 function iconMarkup(type){ return ICONS[type] || ICONS.jar; }
+
+/* ---------------- 제품 사진 (로컬 파일, patch/box는 사진 없이 아이콘 유지) ---------------- */
+const PHOTO_URLS = {
+  jar: 'images/products/jar.jpg',
+  dropper: 'images/products/dropper.jpg',
+  tube: 'images/products/tube.jpg',
+  pump: 'images/products/pump.jpg',
+  compact: 'images/products/compact.jpg',
+  stick: 'images/products/stick.jpg',
+  spray: 'images/products/spray.jpg',
+};
+function photoUrl(type){ return PHOTO_URLS[type]; }
+function mediaMarkup(p, iconClass, photoClass){
+  const photo = photoUrl(p.icon);
+  return photo
+    ? `<img class="${photoClass}" src="${photo}" alt="${p.name}">`
+    : `<span class="${iconClass}">${iconMarkup(p.icon)}</span>`;
+}
 
 /* ---------------- 위시리스트 ---------------- */
 const WISH_KEY = 'ysw-wishlist';
@@ -917,6 +1106,25 @@ function starsMarkup(rating){
   return '★'.repeat(rating) + '☆'.repeat(5 - rating);
 }
 
+/* ---------------- 리뷰 욕설/비속어 필터 ----------------
+   지금은 간단한 금칙어 기반 필터. 나중에 백엔드가 생기면
+   checkBannedContent() 함수만 실제 모더레이션 API 호출로 교체하면 됨. */
+const BANNED_WORDS = [
+  '시발','씨발','씨팔','ㅅㅂ','좆','존나','존나게','병신','ㅄ',
+  '개새끼','개새','새끼','미친놈','미친년','걸레같','창녀','씹','지랄',
+  'fuck','fucking','shit','bitch','asshole','bastard',
+];
+function normalizeForFilter(text){
+  return text
+    .toLowerCase()
+    .replace(/[\s.,!?~_\-*'"()\[\]<>/\\]/g, '')
+    .replace(/(.)\1+/g, '$1');
+}
+function checkBannedContent(text){
+  const normalized = normalizeForFilter(text);
+  return BANNED_WORDS.some(word => normalized.includes(normalizeForFilter(word)));
+}
+
 /* ---------------- 배송 예정일 계산 ---------------- */
 const CUTOFF_HOUR = 15; // 오후 3시 이전 주문 시 당일 출고
 const WEEKDAY_KR = ['일','월','화','수','목','금','토'];
@@ -995,15 +1203,16 @@ function renderGrid(list, isRanked){
     const isSoldOut = p.stock === 0;
     const isLowStock = !isSoldOut && p.stock < 10;
     const rank = idx + 1;
+    const cardPhoto = photoUrl(p.icon);
     const card = document.createElement('div');
     card.className = `card${isSoldOut ? ' sold-out' : ''}`;
     card.innerHTML = `
-      <div class="card-swatch" style="background:${p.swatch}">
+      <div class="card-swatch${cardPhoto ? ' has-photo' : ''}" style="background:${p.swatch}">
+        ${mediaMarkup(p, 'card-icon', 'card-photo')}
         ${isSoldOut ? '<span class="stock-badge">품절</span>' : ''}
-        ${isDiscounted ? '<span class="discount-tag">SALE</span>' : ''}
-        <span class="card-icon">${iconMarkup(p.icon)}</span>
-        ${p.volume}
+        <span class="card-vol">${p.volume}</span>
       </div>
+      ${isDiscounted ? '<span class="discount-tag">SALE</span>' : ''}
       ${isRanked ? `<span class="rank-badge${rank<=3 ? ' top3' : ''}">${rank}</span>` : ''}
       <button class="wish-btn${isWished ? ' active' : ''}" aria-label="위시리스트에 담기" type="button">${HEART_SVG}</button>
       <div class="lot">${p.lot} ${trendMarkup(p)}</div>
@@ -1044,9 +1253,10 @@ function openDetail(id){
   const ingredientChips = p.ingredients.map((ing, i)=>
     `<span class="ingredient-chip${i < 2 ? ' hero' : ''}">${ing}</span>`
   ).join('');
+  const detailPhoto = photoUrl(p.icon);
   detailBody.innerHTML = `
-    <div class="detail-swatch" style="background:${p.swatch}">
-      <span class="detail-icon">${iconMarkup(p.icon)}</span>
+    <div class="detail-swatch${detailPhoto ? ' has-photo' : ''}" style="background:${p.swatch}">
+      ${mediaMarkup(p, 'detail-icon', 'detail-photo')}
     </div>
     <div class="detail-lot">${p.lot} · ${p.volume} ${trendMarkup(p)}</div>
     <h2>${p.name}</h2>
@@ -1116,6 +1326,7 @@ function openDetail(id){
         <input type="file" id="review-photo-input" accept="image/*" multiple style="display:none;">
         <button class="review-submit-btn" type="button" id="review-submit-btn">후기 남기기</button>
         <p class="review-form-error" id="review-form-error"></p>
+        <p class="review-form-note">욕설·비속어는 자동으로 걸러져요</p>
       </div>
       <div class="review-list" id="review-list"></div>
     </div>
@@ -1259,6 +1470,11 @@ function initReviewSection(productId){
     const text = textEl.value.trim();
     if(selectedStars === 0){ showReviewError('별점을 선택해주세요.'); return; }
     if(!text){ showReviewError('후기 내용을 입력해주세요.'); textEl.focus(); return; }
+    if(checkBannedContent(text)){
+      showReviewError('부적절한 표현이 포함되어 있어요. 내용을 다시 확인해주세요.');
+      textEl.focus();
+      return;
+    }
     hideReviewError();
     addReview(productId, {
       rating: selectedStars,
@@ -1325,7 +1541,7 @@ function renderCartBody(){
       : `즉시배송 · ${delivery.arriveShort}`;
     return `
       <div class="cart-item" data-id="${id}">
-        <span class="ci-icon">${iconMarkup(p.icon)}</span>
+        ${mediaMarkup(p, 'ci-icon', 'ci-photo')}
         <div class="ci-info">
           <div class="ci-name">${p.name}</div>
           <div class="ci-meta">${formatPrice(p.price)} · 수량 ${item.qty}개</div>
@@ -1397,7 +1613,7 @@ function renderWishlistBody(){
     const isSoldOut = p.stock === 0;
     return `
       <div class="cart-item" data-id="${id}">
-        <span class="ci-icon">${iconMarkup(p.icon)}</span>
+        ${mediaMarkup(p, 'ci-icon', 'ci-photo')}
         <div class="ci-info">
           <div class="ci-name">${p.name}</div>
           <div class="ci-meta">${priceMarkup(p)}${isSoldOut ? ' · <span style="color:var(--rose)">품절</span>' : ''}</div>
@@ -1517,6 +1733,148 @@ function renderAuthBody(){
     renderAuthBody();
   });
 }
+
+/* ---------------- 챗봇 피부상담 (규칙 기반 가이드 챗봇) ----------------
+   서버 없는 정적 사이트라 실제 대화형 LLM은 아직 못 붙임.
+   질문 → 버튼 선택 → 다음 질문 순서로 진행되는 가이드형 챗봇으로,
+   마지막에 실제 제품 데이터(피부타입·카테고리·가격·재고)에 매칭해서 추천함.
+   나중에 백엔드가 생기면 AI_STEPS 로직을 실제 LLM 호출로 교체 가능. */
+const aiModal = document.getElementById('ai-modal');
+const aiChatBody = document.getElementById('ai-chat-body');
+document.getElementById('ai-close').addEventListener('click', ()=>aiModal.close());
+document.getElementById('ai-fab').addEventListener('click', openAiChat);
+
+const AI_STEPS = [
+  {
+    key: 'skinType',
+    question: '안녕하세요! 몇 가지만 여쭤보고 딱 맞는 제품을 찾아드릴게요 🌿\n먼저, 피부타입이 어떻게 되세요?',
+    options: ['건성','지성','복합성','민감성','전체'],
+  },
+  {
+    key: 'category',
+    question: '어떤 종류의 제품을 찾고 계세요?',
+    options: ['스킨케어','클렌징','메이크업','헤어케어','바디케어'],
+  },
+  {
+    key: 'price',
+    question: '가격대는 어느 정도가 좋을까요?',
+    options: ['2만원 이하','2~4만원','4만원 이상','상관없어요'],
+  },
+];
+
+let aiState = {};
+let aiStepIndex = 0;
+let aiTranscript = [];
+
+function openAiChat(){
+  aiState = {};
+  aiStepIndex = 0;
+  aiTranscript = [{ from:'ai', text: AI_STEPS[0].question }];
+  renderAiChat();
+  aiModal.showModal();
+}
+
+function renderAiChat(){
+  aiChatBody.innerHTML = aiTranscript.map(m=>
+    `<div class="ai-bubble from-${m.from}">${m.text.replace(/\n/g,'<br>')}</div>`
+  ).join('');
+
+  if(aiStepIndex < AI_STEPS.length){
+    const step = AI_STEPS[aiStepIndex];
+    const replyRow = document.createElement('div');
+    replyRow.className = 'ai-quick-replies';
+    step.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = opt;
+      btn.addEventListener('click', ()=>handleAiAnswer(step.key, opt));
+      replyRow.appendChild(btn);
+    });
+    aiChatBody.appendChild(replyRow);
+  } else {
+    renderAiRecommendations();
+  }
+}
+
+function handleAiAnswer(key, value){
+  aiState[key] = value;
+  aiTranscript.push({ from:'user', text: value });
+  aiStepIndex++;
+  if(aiStepIndex < AI_STEPS.length){
+    aiTranscript.push({ from:'ai', text: AI_STEPS[aiStepIndex].question });
+  } else {
+    aiTranscript.push({ from:'ai', text: '감사해요! 말씀해주신 조건으로 찾아봤어요:' });
+  }
+  renderAiChat();
+}
+
+function renderAiRecommendations(){
+  const list = PRODUCTS.filter(p=>{
+    const matchesSkin = aiState.skinType === '전체' || p.skinType === aiState.skinType || p.skinType === '전체';
+    const matchesCategory = p.category === aiState.category;
+    let matchesPrice = true;
+    if(aiState.price === '2만원 이하') matchesPrice = p.price <= 20000;
+    else if(aiState.price === '2~4만원') matchesPrice = p.price > 20000 && p.price <= 40000;
+    else if(aiState.price === '4만원 이상') matchesPrice = p.price > 40000;
+    return matchesSkin && matchesCategory && matchesPrice && p.stock > 0;
+  }).sort((a,b)=>b.rating - a.rating);
+
+  const wrap = document.createElement('div');
+
+  if(list.length === 0){
+    wrap.innerHTML = `<div class="review-empty">조건에 꼭 맞는 제품을 못 찾았어요. 조건을 조금 바꿔서 다시 찾아볼까요?</div>`;
+  } else {
+    list.slice(0, 3).forEach(p=>{
+      const card = document.createElement('div');
+      card.className = 'ai-reco-card';
+      card.innerHTML = `
+        ${mediaMarkup(p, 'ci-icon', 'ci-photo')}
+        <div class="ai-reco-info">
+          <div class="ai-reco-name">${p.name}</div>
+          <div class="ai-reco-meta">★${p.rating.toFixed(2)} · ${formatPrice(p.price)}</div>
+        </div>
+        <button class="ai-reco-view-btn" type="button" data-id="${p.id}">자세히</button>
+      `;
+      wrap.appendChild(card);
+    });
+  }
+
+  const restartBtn = document.createElement('button');
+  restartBtn.className = 'ai-restart-btn';
+  restartBtn.type = 'button';
+  restartBtn.textContent = '다시 상담받기';
+  restartBtn.addEventListener('click', openAiChat);
+  wrap.appendChild(restartBtn);
+
+  aiChatBody.appendChild(wrap);
+
+  wrap.querySelectorAll('.ai-reco-view-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      aiModal.close();
+      openDetail(Number(btn.dataset.id));
+    });
+  });
+}
+
+/* ---------------- 검색 모달 ---------------- */
+const searchModal = document.getElementById('search-modal');
+const searchModalInput = document.getElementById('search-modal-input');
+document.getElementById('search-modal-close').addEventListener('click', ()=>searchModal.close());
+document.getElementById('search-fab').addEventListener('click', ()=>{
+  searchModalInput.value = fSearch.value;
+  searchModal.showModal();
+  searchModalInput.focus();
+});
+function runModalSearch(){
+  fSearch.value = searchModalInput.value;
+  applyFilters();
+  searchModal.close();
+  document.querySelector('.grid').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+document.getElementById('search-modal-go').addEventListener('click', runModalSearch);
+searchModalInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') runModalSearch();
+});
 
 updateAuthUI();
 updateCartBadge();
