@@ -102,7 +102,7 @@
     line-height: 1.7;
   }
   .brand-film{
-    width: min(100%, 820px);
+    width: 100%;
     display: block;
     margin: 2rem auto 0;
     aspect-ratio: 16 / 9;
@@ -865,7 +865,7 @@
     <h1 class="brand-wordmark">젊음의 샘물</h1>
     <span class="brand-en">Spring Water of Youth</span>
     <p class="brand-desc">피부 컨디션에 가장 좋은 상태로. 자극은 줄이고 근거는 뚜렷한 성분으로, 매일의 피부에 잔잔한 물기를 더합니다.</p>
-    <video class="brand-film" controls muted playsinline preload="metadata" aria-label="브랜드 소개 영상">
+    <video class="brand-film" id="brand-film" controls loop playsinline preload="metadata" aria-label="브랜드 소개 영상">
       <source src="Video%20Project.mp4" type="video/mp4">
       Your browser does not support video playback.
     </video>
@@ -2073,6 +2073,23 @@ updateWishBadge();
 
 renderGrid(PRODUCTS, false);
 fCount.textContent = `${PRODUCTS.length} / ${PRODUCTS.length}`;
+
+/* ---------------- 브랜드 영상 ---------------- */
+const brandFilm = document.getElementById('brand-film');
+if('IntersectionObserver' in window && brandFilm){
+  const brandFilmObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting && entry.intersectionRatio >= 0.55){
+        brandFilm.play().catch(()=>{
+          /* Browsers may block unmuted autoplay until the visitor interacts. */
+        });
+      } else if(!entry.isIntersecting){
+        brandFilm.pause();
+      }
+    });
+  }, { threshold: [0, 0.55] });
+  brandFilmObserver.observe(brandFilm);
+}
 </script>
 </body>
 </html>
