@@ -39,12 +39,14 @@
   }
 
   body{
-    background-color: #E1EDE2;
+    background-color: #E6EBDD;
     background-image:
-      radial-gradient(circle at 16% 12%, rgba(212,178,106,0.28), transparent 40%),
-      radial-gradient(circle at 84% 8%, rgba(124,146,94,0.28), transparent 44%),
-      radial-gradient(ellipse at 50% 35%, rgba(111,163,156,0.30), transparent 60%),
-      linear-gradient(180deg, #F3F7F2 0%, #E1EDE2 100%);
+      radial-gradient(circle at 16% 12%, rgba(212,178,106,0.12), transparent 42%),
+      radial-gradient(circle at 84% 8%, rgba(124,146,94,0.12), transparent 46%),
+      radial-gradient(ellipse at 50% 35%, rgba(111,163,156,0.13), transparent 65%),
+      linear-gradient(90deg, #F3F2E5 0%, #E9EEE4 52%, #DCE7D9 100%);
+    /* Keep the brand atmosphere stable when filtering changes page height. */
+    background-attachment: fixed;
     min-height: 100vh;
     position: relative;
   }
@@ -98,6 +100,17 @@
     color: var(--ink-soft);
     font-size: 1.02rem;
     line-height: 1.7;
+  }
+  .brand-film{
+    width: min(100%, 820px);
+    display: block;
+    margin: 2rem auto 0;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: var(--ink);
+    box-shadow: 0 14px 30px rgba(46,95,90,0.14);
   }
   .hero-meta{
     display: flex;
@@ -852,6 +865,10 @@
     <h1 class="brand-wordmark">젊음의 샘물</h1>
     <span class="brand-en">Spring Water of Youth</span>
     <p class="brand-desc">피부 컨디션에 가장 좋은 상태로. 자극은 줄이고 근거는 뚜렷한 성분으로, 매일의 피부에 잔잔한 물기를 더합니다.</p>
+    <video class="brand-film" controls muted playsinline preload="metadata" aria-label="브랜드 소개 영상">
+      <source src="Video%20Project.mp4" type="video/mp4">
+      Your browser does not support video playback.
+    </video>
     <div class="hero-meta">
       <button class="hero-stat" id="stat-products" type="button"><strong id="stat-count">64</strong>개 제품</button>
       <button class="hero-stat" id="stat-categories" type="button"><strong>5</strong>개 카테고리</button>
