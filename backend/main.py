@@ -97,7 +97,8 @@ def _stream_chat(sid: str, session: Session, text: str) -> Iterator[str]:
                 if ev["type"] == "products":
                     cards = [catalog.get_product(i) for i in ev["ids"]]
                     ev = {"type": "products", "products": [
-                        {"id": p["id"], "name": p["name"], "price": p["price"], "rating": p["rating"]}
+                        {"id": p["id"], "name": p["name"], "price": p["price"], "rating": p["rating"],
+                         "source": p["source"], "brand": p["brand"], "url": p["url"]}
                         for p in cards if p
                     ]}
                 yield _sse(ev)

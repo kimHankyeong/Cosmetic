@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1001,
+    "name": "어성초 77 히알루론산 수분 진정 토너 250ml",
+    "brand": "아누아",
+    "category": "스킨케어",
+    "skinType": "전체",
+    "price": 20000,
+    "volume": "250ml",
+    "ingredients": ["어성초수", "글리세린", "히알루론산", "판테놀", "알란토인", "징크피씨에이"],
+    "desc": "어성초수에 여러 종류의 히알루론산을 더한 수분 진정 토너. 브랜드는 모든 피부에 사용할 수 있다고 안내해요.",
+    "url": "https://m.anua.kr/product/new%EB%A6%AC%EB%89%B4%EC%96%BC-%EC%96%B4%EC%84%B1%EC%B4%88-77-%ED%9E%88%EC%95%8C%EB%A3%A8%EB%A1%A0%EC%82%B0-%EC%88%98%EB%B6%84-%EC%A7%84%EC%A0%95-%ED%86%A0%EB%84%88-250ml/496/"
+  },
+  {
+    "id": 1002,
+    "name": "아토베리어365 크림 80ml",
+    "brand": "에스트라",
+    "category": "스킨케어",
+    "skinType": "민감성",
+    "price": null,
+    "volume": "80ml",
+    "ingredients": ["세라마이드", "콜레스테롤", "지방산", "나이아신아마이드", "스쿠알란", "알란토인"],
+    "desc": "세라마이드, 콜레스테롤, 지방산에 나이아신아마이드를 더한 보습 크림. 민감하고 건조한 피부의 피부 장벽을 지켜주는 제품이에요.",
+    "url": "https://www.aestura.com/m/product/view.do?prdSeq=1021"
+  },
+  {
+    "id": 1003,
+    "name": "다이브인 저분자 히알루론산 세럼 40ml",
+    "brand": "토리든",
+    "category": "스킨케어",
+    "skinType": "전체",
+    "price": 16000,
+    "volume": "40ml",
+    "ingredients": ["히알루론산", "판테놀"],
+    "desc": "저분자 히알루론산 중심의 수분 세럼.",
+    "url": "https://www.torriden.com/goods/goods_view.php?goodsNo=181"
+  },
+  {
+    "id": 1004,
+    "name": "세라마이드 아토 집중크림",
+    "brand": "일리윤",
+    "category": "스킨케어",
+    "skinType": "건성",
+    "price": null,
+    "volume": null,
+    "ingredients": ["세라마이드", "마데카소사이드", "인삼수", "황금추출물", "매실추출물"],
+    "desc": "민감하고 건조한 피부에 순하게 보습과 진정을 주는 피부 장벽 강화 크림.",
+    "url": "https://illiyoon.com/product/%ED%8C%A8%EB%B0%80%EB%A6%AC%EC%84%B8%ED%8A%B8-%EC%84%B8%EB%9D%BC%EB%A7%88%EC%9D%B4%EB%93%9C-%EC%95%84%ED%86%A0-%EC%A7%91%EC%A4%91%ED%81%AC%EB%A6%BC-500ml-%ED%8C%A8%EB%B0%80%EB%A6%AC%EC%84%B8%ED%8A%B8/186/"
+  }
+]

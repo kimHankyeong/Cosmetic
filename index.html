@@ -770,6 +770,7 @@
   .ai-reco-card .ai-reco-info{ flex: 1; }
   .ai-reco-card .ai-reco-name{ font-size: 0.88rem; color: var(--ink); margin-bottom: 0.15rem; }
   .ai-reco-card .ai-reco-meta{ font-family: var(--font-mono); font-size: 0.74rem; color: var(--mono-accent); }
+  a.ai-reco-view-btn{ text-decoration: none; white-space: nowrap; }
   .ai-reco-view-btn{
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -1950,6 +1951,30 @@ function addAiBubble(from, text){
 
 function renderAiProducts(cards){
   cards.forEach(c=>{
+    if(c.source === 'market'){
+      // 다른 브랜드의 시중 제품: 이 쇼핑몰 상품이 아니므로 공식몰 링크로 연결
+      const card = document.createElement('div');
+      card.className = 'ai-reco-card';
+      const info = document.createElement('div');
+      info.className = 'ai-reco-info';
+      const nameEl = document.createElement('div');
+      nameEl.className = 'ai-reco-name';
+      nameEl.textContent = `${c.brand || ''} ${c.name}`.trim();
+      const meta = document.createElement('div');
+      meta.className = 'ai-reco-meta';
+      meta.textContent = (c.price ? formatPrice(c.price) : '가격은 공식몰 확인') + ' · 타 브랜드';
+      info.append(nameEl, meta);
+      card.appendChild(info);
+      if(/^https?:\/\//.test(c.url || '')){
+        const a = document.createElement('a');
+        a.className = 'ai-reco-view-btn';
+        a.href = c.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.textContent = '공식몰 보기';
+        card.appendChild(a);
+      }
+      aiChatBody.appendChild(card);
+      return;
+    }
     const p = PRODUCTS.find(x=>x.id === c.id);
     if(!p) return;
     const card = document.createElement('div');

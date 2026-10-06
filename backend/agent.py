@@ -31,6 +31,8 @@ SYSTEM_PROMPT = """\
 - 검색 결과가 없으면 가격 → 카테고리 순으로 조건을 풀어 한 번 더 검색하고, 그래도 조건에 딱 맞지 않으면 가장 가까운 제품을 추천하면서 어떤 점이 다른지 솔직하게 말한다. 결과를 못 찾았다는 말만 하고 끝내지 않는다.
 - 한 번에 2~3개만 추천하고, 각 제품마다 사용자의 상황과 연결된 이유(핵심 성분 포함)를 한두 문장으로 설명한다.
 - 알레르기나 기피 성분은 exclude_ingredients로 반드시 걸러낸다.
+- 도구 결과의 source가 market인 제품은 다른 브랜드의 시중 제품이다. 추천할 때 "브랜드 제품명" 형태로 말하고, 이 쇼핑몰에서 파는 상품이 아니라는 점을 한 번 밝힌다. 사용자가 다른 브랜드나 시중 제품을 원하면 source를 market으로 검색한다.
+- ingredientsAreKeyOnly가 true인 제품의 성분은 주요 성분일 뿐 전성분이 아니다. 알레르기·기피 성분 이야기가 나오면 "전성분은 공식몰에서 꼭 확인해 주세요"라고 안내하고, 해당 성분이 없다고 단정하지 않는다. price나 volume이 null이면 지어내지 말고 "가격은 공식몰에서 확인해 주세요"라고 말한다.
 - 문장은 자연스러운 한국어로 쓴다. 보습 효과는 '촉촉함이 오래 유지돼요'처럼 긍정 표현으로 말하고, '건조함을 지속시킨다'처럼 뜻이 뒤집히는 표현은 쓰지 않는다. 성분 나열은 핵심 2~3개로 줄이고, 번역투와 과장 표현(최고, 완벽)은 피한다.
 - 마크다운 제목, 표, 굵은 글씨는 쓰지 않는다. 본문에 제품 id를 쓰지 않는다. 가격·용량·평점·성분은 도구 결과의 값을 그대로 옮기고, 다른 피부 타입용 제품을 권할 때는 그 사실을 밝힌다.
 
@@ -50,6 +52,7 @@ TOOLS = [
             "include_ingredients": {"type": "array", "items": {"type": "string"}, "description": "반드시 포함할 성분(한글 부분 일치). 예: 세라마이드"},
             "exclude_ingredients": {"type": "array", "items": {"type": "string"}, "description": "제외할 성분(한글 부분 일치). 알레르기·기피 성분."},
             "keyword": {"type": "string", "description": "제품명/설명/성분에서 찾을 단어"},
+            "source": {"type": "string", "enum": ["shop", "market"], "description": "shop=이 쇼핑몰 상품, market=다른 브랜드의 시중 제품. 생략하면 둘 다 검색."},
             "limit": {"type": "integer", "description": "기본 6, 최대 10"},
         }},
     }},
@@ -108,6 +111,7 @@ def _run_tool(name: str, args: dict, profile: dict, seen_ids: set[int]) -> str:
                 "include_ingredients": _to_list(args.get("include_ingredients")),
                 "exclude_ingredients": _to_list(args.get("exclude_ingredients")),
                 "keyword": args.get("keyword") or None,
+                "source": args.get("source") if args.get("source") in ("shop", "market") else None,
                 "limit": _to_int(args.get("limit")) or 6,
             }
             found = catalog.search_products(**clean)
