@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cosmetic-ai
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: LLM_MODEL
+        value: openai/gpt-oss-120b
+      # 아래 두 값은 Blueprint 생성 화면에서 직접 입력 (저장소에 올리지 않음)
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS   # 예: https://내-프로젝트.vercel.app
+        sync: false
