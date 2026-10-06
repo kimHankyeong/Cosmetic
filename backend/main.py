@@ -29,6 +29,8 @@ app = FastAPI(title="샘 - 화장품 추천 AI")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=os.getenv("ALLOWED_ORIGINS", "*").split(","),
+    # Vercel 미리보기 배포 주소(cosmetic-xxxx-clarakim.vercel.app)도 허용
+    allow_origin_regex=r"https://cosmetic-[a-z0-9]+-clarakim\.vercel\.app",
     allow_methods=["POST", "DELETE"],
     allow_headers=["Content-Type"],
 )
