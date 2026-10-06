@@ -1898,7 +1898,9 @@ function renderAuthBody(){
    백엔드(코스메틱back, FastAPI) /api/chat 으로 자유 대화를 보내고,
    응답의 추천 제품 id를 PRODUCTS와 매칭해 카드로 보여준다.
    대화 기록은 서버 메모리에만 있고 30분 뒤 파기된다. */
-const AI_API = 'http://localhost:8000';
+const AI_API = ['localhost','127.0.0.1',''].includes(location.hostname)
+  ? 'http://localhost:8000'
+  : 'https://cosmetic-ai.onrender.com';
 const aiModal = document.getElementById('ai-modal');
 const aiChatBody = document.getElementById('ai-chat-body');
 const aiForm = document.getElementById('ai-form');
