@@ -735,7 +735,12 @@
   #ai-modal article{ max-width: 480px; background: var(--surface); display: flex; flex-direction: column; }
   #ai-modal header{ display: flex; align-items: center; justify-content: space-between; }
   #ai-modal header strong{ font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
-  .ai-chat{ display: flex; flex-direction: column; gap: 0.7rem; padding-bottom: 0.4rem; }
+  .ai-chat{ display: flex; flex-direction: column; gap: 0.7rem; padding-bottom: 0.4rem; max-height: 55vh; overflow-y: auto; }
+  .ai-pending{ opacity: 0.55; }
+  .ai-profile{ font-size: 0.76rem; color: var(--sage-deep); margin-top: 0.5rem; }
+  .ai-form{ display: flex; gap: 0.5rem; margin: 0.8rem 0 0; padding-top: 0.8rem; border-top: 1px solid var(--line); }
+  .ai-form input{ flex: 1; margin: 0; font-size: 0.88rem; }
+  .ai-form button{ margin: 0; width: auto; font-size: 0.84rem; padding: 0 1rem; background: var(--sage-deep); border-color: var(--sage-deep); color: var(--surface); }
   .ai-bubble{ max-width: 82%; padding: 0.6rem 0.85rem; border-radius: 10px; font-size: 0.88rem; line-height: 1.5; }
   .ai-bubble.from-ai{ align-self: flex-start; background: var(--bg); color: var(--ink); border-bottom-left-radius: 2px; }
   .ai-bubble.from-user{ align-self: flex-end; background: var(--sage-deep); color: var(--surface); border-bottom-right-radius: 2px; }
@@ -957,6 +962,11 @@
   <article>
     <header><button aria-label="Close" rel="prev" id="ai-close"></button><strong>챗봇 피부상담</strong></header>
     <div class="ai-chat" id="ai-chat-body"></div>
+    <div class="ai-profile" id="ai-profile" hidden></div>
+    <form class="ai-form" id="ai-form" autocomplete="off">
+      <input type="text" id="ai-input" maxlength="500" placeholder="피부 고민을 말씀해 주세요" aria-label="메시지 입력">
+      <button type="submit" id="ai-send">보내기</button>
+    </form>
   </article>
 </dialog>
 
@@ -1884,126 +1894,144 @@ function renderAuthBody(){
   });
 }
 
-/* ---------------- 챗봇 피부상담 (규칙 기반 가이드 챗봇) ----------------
-   서버 없는 정적 사이트라 실제 대화형 LLM은 아직 못 붙임.
-   질문 → 버튼 선택 → 다음 질문 순서로 진행되는 가이드형 챗봇으로,
-   마지막에 실제 제품 데이터(피부타입·카테고리·가격·재고)에 매칭해서 추천함.
-   나중에 백엔드가 생기면 AI_STEPS 로직을 실제 LLM 호출로 교체 가능. */
+/* ---------------- 챗봇 피부상담 (샘 AI) ----------------
+   백엔드(코스메틱back, FastAPI) /api/chat 으로 자유 대화를 보내고,
+   응답의 추천 제품 id를 PRODUCTS와 매칭해 카드로 보여준다.
+   대화 기록은 서버 메모리에만 있고 30분 뒤 파기된다. */
+const AI_API = 'http://localhost:8000';
 const aiModal = document.getElementById('ai-modal');
 const aiChatBody = document.getElementById('ai-chat-body');
+const aiForm = document.getElementById('ai-form');
+const aiInput = document.getElementById('ai-input');
+const aiSend = document.getElementById('ai-send');
+const aiProfileEl = document.getElementById('ai-profile');
 document.getElementById('ai-close').addEventListener('click', ()=>aiModal.close());
 document.getElementById('ai-fab').addEventListener('click', openAiChat);
+aiForm.addEventListener('submit', e=>{ e.preventDefault(); sendAiMessage(aiInput.value); });
 
-const AI_STEPS = [
-  {
-    key: 'skinType',
-    question: '안녕하세요! 몇 가지만 여쭤보고 딱 맞는 제품을 찾아드릴게요 🌿\n먼저, 피부타입이 어떻게 되세요?',
-    options: ['건성','지성','복합성','민감성','전체'],
-  },
-  {
-    key: 'category',
-    question: '어떤 종류의 제품을 찾고 계세요?',
-    options: ['스킨케어','클렌징','메이크업','헤어케어','바디케어'],
-  },
-  {
-    key: 'price',
-    question: '가격대는 어느 정도가 좋을까요?',
-    options: ['2만원 이하','2~4만원','4만원 이상','상관없어요'],
-  },
-];
+const AI_GREETING = '안녕하세요, 스킨케어 어드바이저 샘이에요 🌿\n피부 고민이나 찾는 제품을 편하게 말씀해 주세요.';
+const AI_STARTERS = ['건성인데 보습 크림 추천해줘','지성이라 번들거려요','민감성 피부 클렌저','2만원 이하 제품 추천'];
 
-let aiState = {};
-let aiStepIndex = 0;
-let aiTranscript = [];
+let aiSessionId = null;
+let aiBusy = false;
 
 function openAiChat(){
-  aiState = {};
-  aiStepIndex = 0;
-  aiTranscript = [{ from:'ai', text: AI_STEPS[0].question }];
-  renderAiChat();
-  aiModal.showModal();
-}
-
-function renderAiChat(){
-  aiChatBody.innerHTML = aiTranscript.map(m=>
-    `<div class="ai-bubble from-${m.from}">${m.text.replace(/\n/g,'<br>')}</div>`
-  ).join('');
-
-  if(aiStepIndex < AI_STEPS.length){
-    const step = AI_STEPS[aiStepIndex];
-    const replyRow = document.createElement('div');
-    replyRow.className = 'ai-quick-replies';
-    step.options.forEach(opt=>{
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = opt;
-      btn.addEventListener('click', ()=>handleAiAnswer(step.key, opt));
-      replyRow.appendChild(btn);
-    });
-    aiChatBody.appendChild(replyRow);
-  } else {
-    renderAiRecommendations();
+  if(aiSessionId){
+    fetch(`${AI_API}/api/chat/${aiSessionId}`, { method:'DELETE' }).catch(()=>{});
   }
-}
-
-function handleAiAnswer(key, value){
-  aiState[key] = value;
-  aiTranscript.push({ from:'user', text: value });
-  aiStepIndex++;
-  if(aiStepIndex < AI_STEPS.length){
-    aiTranscript.push({ from:'ai', text: AI_STEPS[aiStepIndex].question });
-  } else {
-    aiTranscript.push({ from:'ai', text: '감사해요! 말씀해주신 조건으로 찾아봤어요:' });
-  }
-  renderAiChat();
-}
-
-function renderAiRecommendations(){
-  const list = PRODUCTS.filter(p=>{
-    const matchesSkin = aiState.skinType === '전체' || p.skinType === aiState.skinType || p.skinType === '전체';
-    const matchesCategory = p.category === aiState.category;
-    let matchesPrice = true;
-    if(aiState.price === '2만원 이하') matchesPrice = p.price <= 20000;
-    else if(aiState.price === '2~4만원') matchesPrice = p.price > 20000 && p.price <= 40000;
-    else if(aiState.price === '4만원 이상') matchesPrice = p.price > 40000;
-    return matchesSkin && matchesCategory && matchesPrice && p.stock > 0;
-  }).sort((a,b)=>b.rating - a.rating);
-
-  const wrap = document.createElement('div');
-
-  if(list.length === 0){
-    wrap.innerHTML = `<div class="review-empty">조건에 꼭 맞는 제품을 못 찾았어요. 조건을 조금 바꿔서 다시 찾아볼까요?</div>`;
-  } else {
-    list.slice(0, 3).forEach(p=>{
-      const card = document.createElement('div');
-      card.className = 'ai-reco-card';
-      card.innerHTML = `
-        ${mediaMarkup(p, 'ci-icon', 'ci-photo')}
-        <div class="ai-reco-info">
-          <div class="ai-reco-name">${p.name}</div>
-          <div class="ai-reco-meta">★${p.rating.toFixed(2)} · ${formatPrice(p.price)}</div>
-        </div>
-        <button class="ai-reco-view-btn" type="button" data-id="${p.id}">자세히</button>
-      `;
-      wrap.appendChild(card);
-    });
-  }
-
-  const restartBtn = document.createElement('button');
-  restartBtn.className = 'ai-restart-btn';
-  restartBtn.type = 'button';
-  restartBtn.textContent = '다시 상담받기';
-  restartBtn.addEventListener('click', openAiChat);
-  wrap.appendChild(restartBtn);
-
-  aiChatBody.appendChild(wrap);
-
-  wrap.querySelectorAll('.ai-reco-view-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      aiModal.close();
-      openDetail(Number(btn.dataset.id));
-    });
+  aiSessionId = null;
+  aiChatBody.innerHTML = '';
+  renderAiProfile({});
+  addAiBubble('ai', AI_GREETING);
+  const chips = document.createElement('div');
+  chips.className = 'ai-quick-replies';
+  AI_STARTERS.forEach(t=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = t;
+    btn.addEventListener('click', ()=>{ chips.remove(); sendAiMessage(t); });
+    chips.appendChild(btn);
   });
+  aiChatBody.appendChild(chips);
+  aiModal.showModal();
+  aiInput.focus();
+}
+
+function addAiBubble(from, text){
+  const div = document.createElement('div');
+  div.className = `ai-bubble from-${from}`;
+  div.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+  aiChatBody.appendChild(div);
+  aiChatBody.scrollTop = aiChatBody.scrollHeight;
+  return div;
+}
+
+function renderAiProducts(cards){
+  cards.forEach(c=>{
+    const p = PRODUCTS.find(x=>x.id === c.id);
+    if(!p) return;
+    const card = document.createElement('div');
+    card.className = 'ai-reco-card';
+    card.innerHTML = `
+      ${mediaMarkup(p, 'ci-icon', 'ci-photo')}
+      <div class="ai-reco-info">
+        <div class="ai-reco-name">${escapeHtml(p.name)}</div>
+        <div class="ai-reco-meta">★${p.rating.toFixed(2)} · ${formatPrice(p.price)}</div>
+      </div>
+      <button class="ai-reco-view-btn" type="button">자세히</button>
+    `;
+    card.querySelector('button').addEventListener('click', ()=>{ aiModal.close(); openDetail(p.id); });
+    aiChatBody.appendChild(card);
+  });
+  aiChatBody.scrollTop = aiChatBody.scrollHeight;
+}
+
+function renderAiProfile(profile){
+  const parts = [];
+  if(profile.skin_type) parts.push(profile.skin_type);
+  if(profile.concerns?.length) parts.push(profile.concerns.join('·'));
+  if(profile.avoid_ingredients?.length) parts.push('피할 성분 ' + profile.avoid_ingredients.join('·'));
+  if(profile.max_budget) parts.push(formatPrice(profile.max_budget) + ' 이하');
+  aiProfileEl.textContent = parts.length ? '기억 중: ' + parts.join(' / ') : '';
+  aiProfileEl.hidden = !parts.length;
+}
+
+async function sendAiMessage(raw){
+  const text = raw.trim();
+  if(!text || aiBusy) return;
+  aiBusy = true;
+  aiSend.disabled = true;
+  aiInput.value = '';
+  addAiBubble('user', text);
+  const bubble = addAiBubble('ai', '…');
+  bubble.classList.add('ai-pending');
+  let reply = '';
+  try{
+    const res = await fetch(`${AI_API}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: aiSessionId, message: text }),
+    });
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err.detail || '상담 서버에 연결하지 못했어요.');
+    }
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    const handle = ev=>{
+      if(ev.type === 'session') aiSessionId = ev.session_id;
+      else if(ev.type === 'token'){
+        reply += ev.text;
+        bubble.classList.remove('ai-pending');
+        bubble.innerHTML = escapeHtml(reply.replace(/\*\*/g, '')).replace(/\n/g, '<br>');
+      }
+      else if(ev.type === 'crisis'){ reply = ev.text; bubble.classList.remove('ai-pending'); bubble.innerHTML = escapeHtml(reply.replace(/\*\*/g, '')).replace(/\n/g, '<br>'); }
+      else if(ev.type === 'products') renderAiProducts(ev.products);
+      else if(ev.type === 'profile') renderAiProfile(ev.profile);
+      else if(ev.type === 'error') throw new Error(ev.text);
+      aiChatBody.scrollTop = aiChatBody.scrollHeight;
+    };
+    for(;;){
+      const { value, done } = await reader.read();
+      if(done) break;
+      buf += decoder.decode(value, { stream:true });
+      let i;
+      while((i = buf.indexOf('\n\n')) >= 0){
+        const line = buf.slice(0, i).trim();
+        buf = buf.slice(i + 2);
+        if(line.startsWith('data:')) handle(JSON.parse(line.slice(5)));
+      }
+    }
+  }catch(e){
+    bubble.classList.remove('ai-pending');
+    bubble.textContent = reply || e.message || '상담 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.';
+  }finally{
+    aiBusy = false;
+    aiSend.disabled = false;
+    aiInput.focus();
+    aiChatBody.scrollTop = aiChatBody.scrollHeight;
+  }
 }
 
 /* ---------------- 카테고리/피부타입 정보 모달 ---------------- */
